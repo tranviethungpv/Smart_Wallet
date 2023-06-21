@@ -5,8 +5,8 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    tools:context=".WelcomeFragment">
+    android:background="@color/white"
+    tools:context=".view.fragment.WelcomeFragment">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -57,29 +57,35 @@
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager2Banner"
-            android:layout_width="410dp"
-            android:layout_height="506dp"
+            android:layout_width="412dp"
+            android:layout_height="444dp"
+            android:layout_marginTop="25dp"
+            app:layout_constraintBottom_toTopOf="@+id/indicator_3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="VisualLintBounds" />
 
         <me.relex.circleindicator.CircleIndicator3
             android:id="@+id/indicator_3"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="413dp"
+            android:layout_height="30dp"
             android:layout_gravity="center"
             app:ci_drawable="@color/green_special"
             app:ci_drawable_unselected="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/viewPager2Banner"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/viewPager2Banner" />
+            app:layout_constraintTop_toBottomOf="@+id/viewPager2Banner"
+            app:layout_constraintVertical_bias="0.0"
+            tools:ignore="VisualLintBounds" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@id/buttonLayout"
         android:layout_width="413dp"
-        android:layout_height="141dp"
+        android:layout_height="187dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -87,32 +93,35 @@
 
         <Button
             android:id="@+id/buttonSignUp"
-            android:layout_width="290dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/rounded_button_green"
-            android:text="@string/sign_up"
+            android:layout_width="300dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="5dp"
+            android:backgroundTint="@color/green_special"
             android:elevation="20dp"
+            android:text="@string/sign_up"
             android:textAllCaps="false"
+            android:textSize="16sp"
             android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/buttonSignIn"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.503"
+            app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
         <Button
             android:id="@+id/buttonSignIn"
-            android:layout_width="290dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/rounded_button_gray"
-            android:text="@string/sign_in"
+            android:layout_width="300dp"
+            android:layout_height="60dp"
+            android:backgroundTint="#FFDD82"
             android:elevation="20dp"
+            android:text="@string/sign_in"
             android:textAllCaps="false"
+            android:textSize="16sp"
             android:textColor="@color/green_special"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonSignUp"
             app:layout_constraintVertical_bias="0.236"

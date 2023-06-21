@@ -5,4 +5,9 @@
     <string name="logo_app">Logo App</string>
     <string name="sign_up">Sign up for free</string>
     <string name="sign_in">Sign in</string>
+    <string name="slogan_1">Quản lý tài chính thông minh</string>
+    <string name="slogan">slogan</string>
+    <string name="bannerImage">bannerImage</string>
+    <string name="slogan_2">Tất cả trong một</string>
+    <string name="slogan_3">Thông tin của bạn luôn bảo mật</string>
 </resources>
