@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Smart Wallet</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="logo_app">Logo App</string>
+    <string name="sign_up">Sign up for free</string>
+    <string name="sign_in">Sign in</string>
 </resources>
