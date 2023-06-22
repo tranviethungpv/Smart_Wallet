@@ -9,6 +9,7 @@ import com.example.smartwallet.view.fragment.WelcomeFragment;
 
 public class MainActivity extends AppCompatActivity {
     private final WelcomeFragment welcomeFragment = new WelcomeFragment();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -3,11 +3,20 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="logo_app">Logo App</string>
-    <string name="sign_up">Sign up for free</string>
-    <string name="sign_in">Sign in</string>
+    <string name="sign_up_free">Đăng ký miễn phí</string>
+    <string name="sign_up">Đăng ký</string>
+    <string name="sign_in">Đăng nhập</string>
     <string name="slogan_1">Quản lý tài chính thông minh</string>
     <string name="slogan">slogan</string>
     <string name="bannerImage">bannerImage</string>
     <string name="slogan_2">Tất cả trong một</string>
     <string name="slogan_3">Thông tin của bạn luôn bảo mật</string>
+    <string name="login">Đăng nhập</string>
+    <string name="login_with_facebook">Login with Facebook</string>
+    <string name="login_with_google">Login with Google</string>
+    <string name="login_with_apple">Login with Apple</string>
+    <string name="or">hoặc</string>
+    <string name="username">Tài khoản:</string>
+    <string name="password">Mật khẩu:</string>
+    <string name="forgot_password">Quên mật khẩu?</string>
 </resources>

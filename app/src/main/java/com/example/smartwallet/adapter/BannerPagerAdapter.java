@@ -14,9 +14,10 @@ import java.util.List;
 public class BannerPagerAdapter extends RecyclerView.Adapter<BannerPagerAdapter.BannerViewHolder> {
     private final List<Integer> layoutIds;
 
-    public BannerPagerAdapter(List<Integer> layoutIds){
+    public BannerPagerAdapter(List<Integer> layoutIds) {
         this.layoutIds = layoutIds;
     }
+
     @NonNull
     @Override
     public BannerPagerAdapter.BannerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
