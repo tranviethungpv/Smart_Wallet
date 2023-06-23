@@ -1,5 +1,6 @@
 package com.example.smartwallet.view.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 
 import com.example.smartwallet.R;
 import com.example.smartwallet.databinding.FragmentLoginBinding;
+import com.example.smartwallet.view.activity.AccountActivity;
+import com.example.smartwallet.view.activity.MainActivity;
 import com.example.smartwallet.viewmodel.UserViewModel;
 
 public class LoginFragment extends Fragment {
@@ -42,7 +45,10 @@ public class LoginFragment extends Fragment {
             userViewModel.loginUser(email, password).observe(getViewLifecycleOwner(), user -> {
                 if (user != null) {
                     Toast.makeText(requireContext(), "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
-                    replaceFragment(new HomeFragment());
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                    intent.putExtra("Email", user.getEmail());
+                    intent.putExtra("Password", user.getPassword());
+                    startActivity(intent);
                 } else {
                     Toast.makeText(requireContext(), "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
                 }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/itemHome"
+        android:icon="@drawable/baseline_home_24"
+        android:title="@string/home"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction" />
+    <item
+        android:id="@+id/itemTransaction"
+        android:icon="@drawable/baseline_account_balance_wallet_24"
+        android:title="@string/transaction"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/itemBlank"
+        tools:ignore="MenuTitle" />
+    <item
+        android:id="@+id/itemStatistic"
+        android:icon="@drawable/baseline_bar_chart_24"
+        android:title="@string/statistic"
+        app:showAsAction="always|withText" />
+    <item
+        android:id="@+id/itemAccount"
+        android:icon="@drawable/baseline_account_circle_24"
+        android:title="@string/account"
+        app:showAsAction="always" />
+</menu>

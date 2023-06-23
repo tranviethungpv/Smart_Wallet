@@ -19,4 +19,11 @@
     <string name="username">Tài khoản:</string>
     <string name="password">Mật khẩu:</string>
     <string name="forgot_password">Quên mật khẩu?</string>
+    <string name="home">Tổng quan</string>
+    <string name="account">Tài khoản</string>
+    <string name="add_transaction">Add Transaction</string>
+    <string name="wallet">Ví</string>
+    <string name="transaction">Giao dịch</string>
+    <string name="statistic">Thống kê</string>
+    <string name="blank">Blank</string>
 </resources>
