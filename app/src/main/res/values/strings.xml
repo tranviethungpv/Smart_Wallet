@@ -26,4 +26,21 @@
     <string name="transaction">Giao dịch</string>
     <string name="statistic">Thống kê</string>
     <string name="blank">Blank</string>
+    <string name="balance">Tổng số dư:</string>
+    <string name="unknow_balance">**********</string>
+    <string name="expense_report">Báo cáo chi tiêu</string>
+    <string name="view_report">Xem báo cáo</string>
+    <string name="recently_transaction">Giao dịch gần đây</string>
+    <string name="view_recently_transaction">Xem tất cả</string>
+    <string name="add_transaction_vi">Thêm giao dịch</string>
+    <string name="price">Số tiền</string>
+    <string name="vnd">VND</string>
+    <string name="_000000">000000</string>
+    <string name="select_category">Chọn phân loại</string>
+    <string name="input_detail">Nhập chi tiết</string>
+    <string name="input_date">Nhập ngày</string>
+    <string name="add">Thêm</string>
+    <string name="cancel">Huỷ</string>
+    <string name="select_date">Chọn ngày tháng</string>
+    <string name="select_wallet">Chọn ví</string>
 </resources>
