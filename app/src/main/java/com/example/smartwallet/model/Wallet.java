@@ -1,6 +1,7 @@
 package com.example.smartwallet.model;
 
 public class Wallet {
+    private String id;
     private Float balance;
     private String name;
     private String userId;
@@ -9,10 +10,15 @@ public class Wallet {
 
     }
 
-    public Wallet(Float balance, String name, String userId) {
+    public Wallet(String id, Float balance, String name, String userId) {
+        this.id = id;
         this.balance = balance;
         this.name = name;
         this.userId = userId;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public Float getBalance() {
@@ -25,6 +31,10 @@ public class Wallet {
 
     public String getUserId() {
         return userId;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setBalance(Float balance) {

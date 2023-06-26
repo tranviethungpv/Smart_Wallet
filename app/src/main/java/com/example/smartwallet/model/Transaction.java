@@ -3,8 +3,10 @@ package com.example.smartwallet.model;
 import java.time.LocalDateTime;
 
 public class Transaction {
+    private String id;
     private String userId;
     private String walletId;
+    private String categoryId;
     private Float amount;
     private String detail;
     private Boolean type;
@@ -14,13 +16,29 @@ public class Transaction {
 
     }
 
-    public Transaction(String userId, String walletId, Float amount, String detail, Boolean type, LocalDateTime date) {
+    public Transaction(String userId, String walletId, String categoryId, Float amount, String detail, Boolean type, LocalDateTime date) {
         this.userId = userId;
         this.walletId = walletId;
+        this.categoryId = categoryId;
         this.amount = amount;
         this.detail = detail;
         this.type = type;
         this.date = date;
+    }
+
+    public Transaction(String id, String userId, String walletId, String categoryId, Float amount, String detail, Boolean type, LocalDateTime date) {
+        this.id = id;
+        this.userId = userId;
+        this.walletId = walletId;
+        this.categoryId = categoryId;
+        this.amount = amount;
+        this.detail = detail;
+        this.type = type;
+        this.date = date;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getUserId() {
@@ -29,6 +47,10 @@ public class Transaction {
 
     public String getWalletId() {
         return walletId;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
     }
 
     public Float getAmount() {
@@ -47,12 +69,20 @@ public class Transaction {
         return date;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public void setUserId(String userId) {
         this.userId = userId;
     }
 
     public void setWalletId(String walletId) {
         this.walletId = walletId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
     public void setAmount(Float amount) {

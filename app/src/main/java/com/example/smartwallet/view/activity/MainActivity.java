@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import com.example.smartwallet.R;
 import com.example.smartwallet.databinding.ActivityMainBinding;
+import com.example.smartwallet.utils.SessionManager;
 import com.example.smartwallet.view.fragment.AddTransactionFragment;
 import com.example.smartwallet.view.fragment.HomeFragment;
 import com.example.smartwallet.view.fragment.InformationFragment;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ActivityMainBinding activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(activityMainBinding.getRoot());
+
         getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
         BottomNavigationView bottomNavigationView = activityMainBinding.bottomNavigationView;
         bottomNavigationView.setOnItemSelectedListener(item -> {
