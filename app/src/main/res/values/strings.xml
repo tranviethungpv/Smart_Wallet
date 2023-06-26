@@ -45,4 +45,10 @@
     <string name="select_wallet">Chọn ví</string>
     <string name="income">Thu</string>
     <string name="outcome">Chi</string>
+    <string name="_00">00</string>
+    <string name="mm_yyyy">MM/yyyy</string>
+    <string name="show_icon">show Icon</string>
+    <string name="category">Phân loại</string>
+    <string name="detail">Chi tiết</string>
+    <string name="hh_mm">hh:mm</string>
 </resources>

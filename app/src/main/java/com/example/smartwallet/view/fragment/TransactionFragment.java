@@ -2,65 +2,81 @@ package com.example.smartwallet.view.fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.smartwallet.R;
+import com.example.smartwallet.adapter.TransactionAdapter;
+import com.example.smartwallet.databinding.FragmentTransactionBinding;
+import com.example.smartwallet.listener.ITransactionClickListener;
+import com.example.smartwallet.model.Category;
+import com.example.smartwallet.model.Transaction;
+import com.example.smartwallet.model.Wallet;
+import com.example.smartwallet.viewmodel.CategoryViewModel;
+import com.example.smartwallet.viewmodel.TransactionViewModel;
+import com.example.smartwallet.viewmodel.WalletViewModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TransactionFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.Comparator;
+
 public class TransactionFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private TransactionAdapter transactionAdapter;
+    private RecyclerView recyclerViewTransaction;
+    private ArrayList<Wallet> walletList;
+    private ArrayList<Category> categoryList;
 
     public TransactionFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TransactionFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static TransactionFragment newInstance(String param1, String param2) {
-        TransactionFragment fragment = new TransactionFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        FragmentTransactionBinding fragmentTransactionBinding = FragmentTransactionBinding.inflate(inflater, container, false);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_transaction, container, false);
+        recyclerViewTransaction = fragmentTransactionBinding.recyclerTransaction;
+        recyclerViewTransaction.setLayoutManager(new GridLayoutManager(requireActivity(), 1));
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
+        recyclerViewTransaction.addItemDecoration(dividerItemDecoration);
+
+        WalletViewModel walletViewModel = new ViewModelProvider(this).get(WalletViewModel.class);
+        CategoryViewModel categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        TransactionViewModel transactionViewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
+
+        transactionViewModel.getAllTransactions().observe(getViewLifecycleOwner(), transactionArrayList -> {
+            // Sort list by Timestamp
+            Comparator<Transaction> descendingComparator = Comparator.comparing(Transaction::getDate).reversed();
+            transactionArrayList.sort(descendingComparator);
+
+            // Observe wallet and category data to retrieve the lists
+            walletViewModel.getAllWallets().observe(getViewLifecycleOwner(), wallets -> {
+                if (wallets != null) {
+                    walletList = new ArrayList<>(wallets);
+
+                    categoryViewModel.getAllCategories().observe(getViewLifecycleOwner(), categories -> {
+                        if (categories != null) {
+                            categoryList = new ArrayList<>(categories);
+
+                            // Both walletList and categoryList have data
+                            transactionAdapter = new TransactionAdapter(transactionArrayList, new ITransactionClickListener() {
+                                @Override
+                                public void onTransactionClick(Transaction transaction) {
+
+                                }
+                            }, walletList, categoryList);
+                            recyclerViewTransaction.setAdapter(transactionAdapter);
+                        }
+                    });
+                }
+            });
+        });
+
+        return fragmentTransactionBinding.getRoot();
     }
 }

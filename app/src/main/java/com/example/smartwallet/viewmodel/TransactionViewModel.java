@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel;
 import com.example.smartwallet.model.Transaction;
 import com.example.smartwallet.repository.TransactionRepository;
 
+import java.util.ArrayList;
+
 public class TransactionViewModel extends ViewModel {
     private final TransactionRepository transactionRepository;
 
@@ -15,5 +17,9 @@ public class TransactionViewModel extends ViewModel {
 
     public MutableLiveData<Boolean> addTransaction(Transaction transaction) {
         return transactionRepository.addTransaction(transaction);
+    }
+
+    public MutableLiveData<ArrayList<Transaction>> getAllTransactions() {
+        return transactionRepository.getAllTransactions();
     }
 }

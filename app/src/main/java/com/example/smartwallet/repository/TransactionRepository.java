@@ -4,7 +4,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.smartwallet.database.firebase.TransactionFirebase;
 import com.example.smartwallet.model.Transaction;
-import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
 
 public class TransactionRepository {
     private final TransactionFirebase transactionFirebase;
@@ -15,5 +16,9 @@ public class TransactionRepository {
 
     public MutableLiveData<Boolean> addTransaction(Transaction transaction) {
         return transactionFirebase.addTransaction(transaction);
+    }
+
+    public MutableLiveData<ArrayList<Transaction>> getAllTransactions() {
+        return transactionFirebase.getAllTransactions();
     }
 }

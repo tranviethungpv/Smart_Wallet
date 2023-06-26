@@ -22,6 +22,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.smartwallet.GlobalFunction;
 import com.example.smartwallet.R;
 import com.example.smartwallet.databinding.FragmentAddTransactionBinding;
 import com.example.smartwallet.model.Category;
@@ -32,6 +33,7 @@ import com.example.smartwallet.viewmodel.CategoryViewModel;
 import com.example.smartwallet.viewmodel.TransactionViewModel;
 import com.example.smartwallet.viewmodel.WalletViewModel;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.Timestamp;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -102,13 +104,9 @@ public class AddTransactionFragment extends Fragment {
 
         addButton.setOnClickListener(v -> {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                DateTimeFormatter formatter;
-
-                formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-
-                LocalDateTime dateTime = LocalDateTime.parse(Objects.requireNonNull(dateTimeEditText.getText()).toString().trim(), formatter);
+                Timestamp timestamp = GlobalFunction.convertLocalDateTimeToTimestamp(Objects.requireNonNull(dateTimeEditText.getText()).toString().trim());
                 if (checkInput()) {
-                    Transaction transaction = new Transaction(sessionManager.getUsername(), selectedWalletId, selectedCategoryId, Float.parseFloat(inputMoney.getText().toString().trim()), inputDetail.getText().toString().trim(), selectedRadio, dateTime);
+                    Transaction transaction = new Transaction(sessionManager.getUsername(), selectedWalletId, selectedCategoryId, Float.parseFloat(inputMoney.getText().toString().trim()), inputDetail.getText().toString().trim(), selectedRadio, timestamp);
                     transactionViewModel.addTransaction(transaction).observe(getViewLifecycleOwner(), result -> {
                         if (result) {
                             Toast.makeText(requireContext(), "Thêm thành công", Toast.LENGTH_SHORT).show();

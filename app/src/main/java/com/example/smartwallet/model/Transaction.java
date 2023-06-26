@@ -1,6 +1,6 @@
 package com.example.smartwallet.model;
 
-import java.time.LocalDateTime;
+import com.google.firebase.Timestamp;
 
 public class Transaction {
     private String id;
@@ -10,13 +10,13 @@ public class Transaction {
     private Float amount;
     private String detail;
     private Boolean type;
-    private LocalDateTime date;
+    private Timestamp date;
 
     public Transaction() {
 
     }
 
-    public Transaction(String userId, String walletId, String categoryId, Float amount, String detail, Boolean type, LocalDateTime date) {
+    public Transaction(String userId, String walletId, String categoryId, Float amount, String detail, Boolean type, Timestamp date) {
         this.userId = userId;
         this.walletId = walletId;
         this.categoryId = categoryId;
@@ -26,7 +26,7 @@ public class Transaction {
         this.date = date;
     }
 
-    public Transaction(String id, String userId, String walletId, String categoryId, Float amount, String detail, Boolean type, LocalDateTime date) {
+    public Transaction(String id, String userId, String walletId, String categoryId, Float amount, String detail, Boolean type, Timestamp date) {
         this.id = id;
         this.userId = userId;
         this.walletId = walletId;
@@ -65,7 +65,7 @@ public class Transaction {
         return type;
     }
 
-    public LocalDateTime getDate() {
+    public Timestamp getDate() {
         return date;
     }
 
@@ -97,7 +97,7 @@ public class Transaction {
         this.type = type;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(Timestamp date) {
         this.date = date;
     }
 }
