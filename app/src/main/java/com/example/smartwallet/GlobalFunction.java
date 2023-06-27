@@ -1,6 +1,9 @@
 package com.example.smartwallet;
 
+import android.annotation.SuppressLint;
+
 import com.google.firebase.Timestamp;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -60,7 +63,7 @@ public class GlobalFunction {
         int year = calendar.get(Calendar.YEAR);
 
         // Format the month and year to desired format
-        return String.format(Locale.getDefault(), "tháng " + month + " năm "+ year);
+        return String.format(Locale.getDefault(), "tháng " + month + " năm " + year);
     }
 
     public static String getTimeFromTimestamp(Timestamp timestamp) {
@@ -75,5 +78,22 @@ public class GlobalFunction {
 
         // Format the time to desired format
         return String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
+    }
+
+    @SuppressLint("DefaultLocale")
+    public static String convertTimestampToFormattedString(Timestamp timestamp) {
+        // Create a Calendar instance and set its time to the Timestamp value
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timestamp.toDate());
+
+        // Extract the components from the Calendar instance
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;  // Months are zero-based
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        // Create the formatted string using the extracted components
+        return String.format("%04d-%02d-%02dT%02d:%02d", year, month, day, hour, minute);
     }
 }

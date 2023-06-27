@@ -21,4 +21,12 @@ public class TransactionRepository {
     public MutableLiveData<ArrayList<Transaction>> getAllTransactions() {
         return transactionFirebase.getAllTransactions();
     }
+
+    public MutableLiveData<Boolean> deleteTransaction(Transaction transaction) {
+        return transactionFirebase.deleteTransaction(transaction);
+    }
+
+    public MutableLiveData<Boolean> updateTransaction(Transaction transaction) {
+        return transactionFirebase.updateTransaction(transaction);
+    }
 }

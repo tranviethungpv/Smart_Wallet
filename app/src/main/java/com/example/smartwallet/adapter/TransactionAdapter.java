@@ -73,7 +73,11 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         String categoryName = categoryMap.get(categoryId);
         holder.textViewCategory.setText(categoryName);
 
-        holder.itemView.setOnClickListener(v -> transactionClickListener.onTransactionClick(currentItem));
+        holder.itemView.setOnClickListener(v -> transactionClickListener.onTransactionClick(currentItem, false));
+        holder.itemView.setOnLongClickListener(v -> {
+            transactionClickListener.onTransactionClick(currentItem, true);
+            return true;
+        });
     }
 
     @Override

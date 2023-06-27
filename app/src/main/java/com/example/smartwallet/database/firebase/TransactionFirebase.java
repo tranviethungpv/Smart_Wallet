@@ -16,6 +16,8 @@ import java.util.ArrayList;
 public class TransactionFirebase {
     private final FirebaseFirestore firestore;
     private final MutableLiveData<Boolean> addedCompletely = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> deletedCompletely = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> updatedCompletely = new MutableLiveData<>();
 
     public TransactionFirebase() {
         firestore = FirebaseFirestore.getInstance();
@@ -45,5 +47,18 @@ public class TransactionFirebase {
         }).addOnFailureListener(e -> Log.d(TAG, "get failed with ", e));
 
         return transactionsLiveData;
+    }
+
+    public MutableLiveData<Boolean> deleteTransaction(Transaction transaction) {
+        String transactionId = transaction.getId();
+
+        firestore.collection("transactions").document(transactionId).delete().addOnSuccessListener(aVoid -> deletedCompletely.setValue(true)).addOnFailureListener(e -> deletedCompletely.setValue(false));
+        return deletedCompletely;
+    }
+
+    public MutableLiveData<Boolean> updateTransaction(Transaction transaction) {
+        String transactionId = transaction.getId();
+        firestore.collection("transactions").document(transactionId).update("userId", transaction.getUserId(), "detail", transaction.getDetail(), "categoryId", transaction.getCategoryId(), "walletId", transaction.getWalletId(), "amount", transaction.getAmount(), "type", transaction.getType(), "date", transaction.getDate()).addOnSuccessListener(aVoid -> updatedCompletely.setValue(true)).addOnFailureListener(e -> updatedCompletely.setValue(false));
+        return updatedCompletely;
     }
 }

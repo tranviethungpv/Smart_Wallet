@@ -51,4 +51,8 @@
     <string name="category">Phân loại</string>
     <string name="detail">Chi tiết</string>
     <string name="hh_mm">hh:mm</string>
+    <string name="edit">Sửa</string>
+    <string name="delete">Xoá</string>
+    <string name="update_transaction_vi">Sửa giao dịch</string>
+    <string name="save">Lưu</string>
 </resources>

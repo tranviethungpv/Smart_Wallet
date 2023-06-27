@@ -22,4 +22,12 @@ public class TransactionViewModel extends ViewModel {
     public MutableLiveData<ArrayList<Transaction>> getAllTransactions() {
         return transactionRepository.getAllTransactions();
     }
+
+    public MutableLiveData<Boolean> deleteTransaction(Transaction transaction) {
+        return transactionRepository.deleteTransaction(transaction);
+    }
+
+    public MutableLiveData<Boolean> updateTransaction(Transaction transaction) {
+        return transactionRepository.updateTransaction(transaction);
+    }
 }
