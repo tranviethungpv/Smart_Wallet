@@ -11,6 +11,7 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
@@ -95,5 +96,23 @@ public class GlobalFunction {
 
         // Create the formatted string using the extracted components
         return String.format("%04d-%02d-%02dT%02d:%02d", year, month, day, hour, minute);
+    }
+
+    public static class MonthYearComparator implements Comparator<String> {
+        @Override
+        public int compare(String key1, String key2) {
+            String[] parts1 = key1.split("-");
+            String[] parts2 = key2.split("-");
+            int month1 = Integer.parseInt(parts1[0]);
+            int year1 = Integer.parseInt(parts1[1]);
+            int month2 = Integer.parseInt(parts2[0]);
+            int year2 = Integer.parseInt(parts2[1]);
+
+            if (year1 != year2) {
+                return Integer.compare(year1, year2);
+            } else {
+                return Integer.compare(month1, month2);
+            }
+        }
     }
 }

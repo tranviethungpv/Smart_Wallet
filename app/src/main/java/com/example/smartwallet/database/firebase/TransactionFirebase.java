@@ -7,22 +7,23 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.smartwallet.model.Transaction;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TransactionFirebase {
     private final FirebaseFirestore firestore;
     private final MutableLiveData<Boolean> addedCompletely = new MutableLiveData<>();
     private final MutableLiveData<Boolean> deletedCompletely = new MutableLiveData<>();
     private final MutableLiveData<Boolean> updatedCompletely = new MutableLiveData<>();
-    private final MutableLiveData<Long> totalAmount = new MutableLiveData<>();
+    private final MutableLiveData<Map<String, Double>> totalAmountByMonth = new MutableLiveData<>();
 
     public TransactionFirebase() {
         firestore = FirebaseFirestore.getInstance();
@@ -67,67 +68,49 @@ public class TransactionFirebase {
         return updatedCompletely;
     }
 
-//    public MutableLiveData<Boolean> calculateTotalForMonth(int month) {
-//        // Get the Firestore instance
-//        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-//
-//        // Specify the collection reference
-//        CollectionReference transactionsRef = firestore.collection("transactions");
-//
-//        // Create a Calendar object to set the start and end dates
-//        Calendar startCalendar = Calendar.getInstance();
-//        startCalendar.set(Calendar.MONTH, month);
-//        startCalendar.set(Calendar.DAY_OF_MONTH, 1);
-//        startCalendar.set(Calendar.HOUR_OF_DAY, 0);
-//        startCalendar.set(Calendar.MINUTE, 0);
-//        startCalendar.set(Calendar.SECOND, 0);
-//        startCalendar.set(Calendar.MILLISECOND, 0);
-//
-//        Calendar endCalendar = Calendar.getInstance();
-//        endCalendar.set(Calendar.MONTH, month + 1);
-//        endCalendar.set(Calendar.DAY_OF_MONTH, 1);
-//        endCalendar.set(Calendar.HOUR_OF_DAY, 0);
-//        endCalendar.set(Calendar.MINUTE, 0);
-//        endCalendar.set(Calendar.SECOND, 0);
-//        endCalendar.set(Calendar.MILLISECOND, 0);
-//
-//        // Create a query to retrieve the transactions within the desired date range
-//        Query query = transactionsRef.whereGreaterThanOrEqualTo("date", startCalendar.getTime())
-//                .whereLessThan("date", endCalendar.getTime());
-//
-//        // Execute the query
-//        query.get().addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                QuerySnapshot querySnapshot = task.getResult();
-//                if (querySnapshot != null) {
-//                    long totalIncome = 0;
-//                    long totalOutcome = 0;
-//
-//                    // Iterate through the query results
-//                    List<DocumentSnapshot> documents = querySnapshot.getDocuments();
-//                    for (DocumentSnapshot document : documents) {
-//                        // Get the transaction data
-//                        Transaction transaction = document.toObject(Transaction.class);
-//                        if (transaction != null) {
-//                            // Add the amount to the appropriate total based on the type
-//                            if ("type".equals(transaction.getType())) {
-//                                totalIncome += transaction.getAmount();
-//                            } else if ("outcome".equals(transaction.getType())) {
-//                                totalOutcome += transaction.getAmount();
-//                            }
-//                        }
-//                    }
-//
-//                    totalAmount.setValue(totalIncome - totalOutcome);
-//                }
-//            } else {
-//                // Handle any errors
-//                Exception exception = task.getException();
-//                if (exception != null) {
-//                    // Handle the exception
-//                }
-//            }
-//        });
-//    }
-//    }
+    public MutableLiveData<Map<String, Double>> calculateTotalAmountByMonth() {
+        CollectionReference docRef = firestore.collection("transactions");
+
+        docRef.get().addOnSuccessListener(task -> {
+                Map<String, Double> monthlyTotals = new HashMap<>();
+
+                for (DocumentSnapshot snapshot : task.getDocuments()) {
+                    // Get the timestamp field
+                    Object timestampObj = snapshot.get("date");
+
+                    if (timestampObj != null) {
+                        // Convert the timestamp to a Date object
+                        Date transactionDate = ((Timestamp) timestampObj).toDate();
+
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(transactionDate);
+                        int month = calendar.get(Calendar.MONTH) + 1; // Adding 1 to get the month in 1-based index
+                        int year = calendar.get(Calendar.YEAR);
+
+                        // Get the amount field
+                        Object amountObj = snapshot.get("amount");
+                        // Get the type field
+                        Object typeObj = snapshot.get("type");
+                        Boolean type = (Boolean) typeObj;
+                        if (Boolean.TRUE.equals(type)) {
+                            if (amountObj != null) {
+                                double amount = (double) amountObj;
+
+                                // Update the total amount for the corresponding month
+                                String monthKey = month + "-" + year;
+                                Double currentTotal = monthlyTotals.get(monthKey);
+                                if (currentTotal != null) {
+                                    currentTotal += amount;
+                                } else {
+                                    currentTotal = amount;
+                                }
+                                monthlyTotals.put(monthKey, currentTotal);
+                            }
+                        }
+                    }
+                }
+                totalAmountByMonth.setValue(monthlyTotals);
+        }).addOnFailureListener(e -> Log.d(TAG, "get failed with ", e));
+        return totalAmountByMonth;
+    }
 }

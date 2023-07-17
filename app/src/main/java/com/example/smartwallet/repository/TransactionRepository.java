@@ -6,6 +6,7 @@ import com.example.smartwallet.database.firebase.TransactionFirebase;
 import com.example.smartwallet.model.Transaction;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class TransactionRepository {
     private final TransactionFirebase transactionFirebase;
@@ -28,5 +29,9 @@ public class TransactionRepository {
 
     public MutableLiveData<Boolean> updateTransaction(Transaction transaction) {
         return transactionFirebase.updateTransaction(transaction);
+    }
+
+    public MutableLiveData<Map<String, Double>> calculateTotalAmountByMonth() {
+        return transactionFirebase.calculateTotalAmountByMonth();
     }
 }

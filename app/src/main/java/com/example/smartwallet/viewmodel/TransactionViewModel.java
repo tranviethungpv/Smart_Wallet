@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.smartwallet.model.Transaction;
 import com.example.smartwallet.repository.TransactionRepository;
-
 import java.util.ArrayList;
+import java.util.Map;
 
 public class TransactionViewModel extends ViewModel {
     private final TransactionRepository transactionRepository;
@@ -29,5 +29,9 @@ public class TransactionViewModel extends ViewModel {
 
     public MutableLiveData<Boolean> updateTransaction(Transaction transaction) {
         return transactionRepository.updateTransaction(transaction);
+    }
+
+    public MutableLiveData<Map<String, Double>> calculateTotalAmountByMonth() {
+        return transactionRepository.calculateTotalAmountByMonth();
     }
 }

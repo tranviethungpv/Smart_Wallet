@@ -110,6 +110,7 @@ public class AddTransactionFragment extends Fragment {
                     transactionViewModel.addTransaction(transaction).observe(getViewLifecycleOwner(), result -> {
                         if (result) {
                             Toast.makeText(requireContext(), "Thêm thành công", Toast.LENGTH_SHORT).show();
+                            clearInput();
                         } else {
                             Toast.makeText(requireContext(), "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
                         }
@@ -118,7 +119,10 @@ public class AddTransactionFragment extends Fragment {
             }
         });
 
-        cancelButton.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
+        cancelButton.setOnClickListener(v -> {
+            clearInput();
+            requireActivity().getSupportFragmentManager().popBackStack();
+        });
 
         return fragmentAddTransactionBinding.getRoot();
     }
@@ -231,5 +235,17 @@ public class AddTransactionFragment extends Fragment {
         }
 
         return true;
+    }
+
+    private void clearInput() {
+        inputMoney.setText("");
+        inputDetail.setText("");
+        String formattedDateTime = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+            formattedDateTime = currentDateTime.format(formatter);
+        }
+        dateTimeEditText.setText(formattedDateTime);
     }
 }
