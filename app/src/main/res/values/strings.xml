@@ -30,7 +30,7 @@
     <string name="unknow_balance">**********</string>
     <string name="expense_report">Báo cáo chi tiêu</string>
     <string name="view_report">Xem báo cáo</string>
-    <string name="recently_transaction">Giao dịch gần đây</string>
+    <string name="most_transaction">Chi tiêu nhiều nhất</string>
     <string name="view_recently_transaction">Xem tất cả</string>
     <string name="add_transaction_vi">Thêm giao dịch</string>
     <string name="price">Số tiền</string>
@@ -55,4 +55,8 @@
     <string name="delete">Xoá</string>
     <string name="update_transaction_vi">Sửa giao dịch</string>
     <string name="save">Lưu</string>
+    <string name="monthYear">Tháng năm</string>
+    <string name="total_paid">Tổng đã chi tháng này </string>
+    <string name="up_down"> tăng/giảm</string>
+    <string name="overview">Tổng quan</string>
 </resources>

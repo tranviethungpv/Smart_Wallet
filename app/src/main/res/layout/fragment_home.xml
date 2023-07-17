@@ -3,14 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layoutHome"
-    android:layout_marginStart="6dp"
-    android:layout_marginTop="6dp"
-    android:layout_marginEnd="6dp"
-    android:layout_marginBottom="6dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="10dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.fragment.HomeFragment">
 
+
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="1"
+        android:text="@string/overview"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/layoutBalance"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/layoutBalance"
@@ -18,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/layoutTitleReport"
+        app:layout_constraintBottom_toTopOf="@+id/lineView1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -26,30 +39,60 @@
         <TextView
             android:id="@+id/textViewBalanceTitle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:text="@string/balance"
             android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/textViewBalance"
+        <LinearLayout
+            android:id="@+id/layoutBalanceValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/unknow_balance"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
+
+            <TextView
+                android:id="@+id/textViewBalance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/unknow_balance"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imageViewShowHide"
+                android:layout_marginStart="10dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/show"
+                tools:ignore="ContentDescription" />
+
+        </LinearLayout>
+
     </LinearLayout>
+
+    <View
+        android:id="@+id/lineView1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/gray"
+        app:layout_constraintBottom_toTopOf="@+id/layoutTitleReport"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutBalance" />
 
     <LinearLayout
         android:id="@+id/layoutTitleReport"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/layoutReport"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layoutBalance">
+        app:layout_constraintTop_toBottomOf="@+id/lineView1">
 
         <TextView
             android:id="@+id/textViewReportTitle"
@@ -74,48 +117,51 @@
         android:id="@+id/layoutReport"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/lineView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layoutTitleReport" />
 
-    <LinearLayout
-        android:id="@+id/layoutRecentlyTransactionTitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
+    <View
+        android:id="@+id/lineView2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/gray"
+        app:layout_constraintBottom_toTopOf="@+id/layoutMostlyTransactionTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layoutReport">
+        app:layout_constraintTop_toBottomOf="@+id/layoutReport" />
+
+    <LinearLayout
+        android:id="@+id/layoutMostlyTransactionTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/layoutMostlyTransaction"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lineView2">
 
         <TextView
-            android:id="@+id/textViewRecentlyTransactionTitle"
-            android:layout_width="wrap_content"
+            android:id="@+id/textViewMostlyTransactionTitle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/recently_transaction"
+            android:text="@string/most_transaction"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/textViewViewRecentlyTransaction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/view_recently_transaction"
-            android:textAlignment="viewEnd"
-            android:textColor="@color/green_special"
-            android:textStyle="bold" />
     </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/layoutRecentlyTransaction"
+        android:id="@+id/layoutMostlyTransaction"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layoutRecentlyTransactionTitle">
+        app:layout_constraintTop_toBottomOf="@id/layoutMostlyTransactionTitle">
 
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
