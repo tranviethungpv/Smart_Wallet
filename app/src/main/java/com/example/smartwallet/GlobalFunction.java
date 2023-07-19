@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 public class GlobalFunction {
@@ -114,5 +115,67 @@ public class GlobalFunction {
                 return Integer.compare(month1, month2);
             }
         }
+    }
+
+    public static Map<String, Double> generateBlankValue(Map<String, Double> listData) {
+        int smallestYear = Integer.MAX_VALUE;
+        int largestYear = Integer.MIN_VALUE;
+
+        Calendar rightNow = Calendar.getInstance();
+        int currentYear = rightNow.get(Calendar.YEAR);
+        int currentMonth = rightNow.get(Calendar.MONTH) + 1;
+
+        for (String monthYear : listData.keySet()) {
+            String[] parts = monthYear.split("-");
+            int year = Integer.parseInt(parts[1]);
+
+            if (year < smallestYear) {
+                smallestYear = year;
+            }
+            if (year > largestYear) {
+                largestYear = year;
+            }
+        }
+        if (currentYear > largestYear) {
+            if (currentMonth == 1) {
+                String key = "12-" + (smallestYear - 1);
+                listData.put(key, 0.0);
+            }
+            for (int year = smallestYear; year <= currentYear; year++) {
+                for (int month = 1; month <= 12; month++) {
+                    String monthYear = String.format(Locale.US, "%02d-%04d", month, year);
+                    if (!listData.containsKey(monthYear)) {
+                        listData.put(monthYear, 0.0);
+                    }
+                }
+            }
+        } else if (currentYear < smallestYear) {
+            if (currentMonth == 1) {
+                String key = "12-" + (currentYear - 1);
+                listData.put(key, 0.0);
+            }
+            for (int year = currentYear; year <= largestYear; year++) {
+                for (int month = 1; month <= 12; month++) {
+                    String monthYear = String.format(Locale.US, "%02d-%04d", month, year);
+                    if (!listData.containsKey(monthYear)) {
+                        listData.put(monthYear, 0.0);
+                    }
+                }
+            }
+        } else {
+            if (currentMonth == 1) {
+                String key = "12-" + (smallestYear - 1);
+                listData.put(key, 0.0);
+            }
+            for (int year = smallestYear; year <= largestYear; year++) {
+                for (int month = 1; month <= 12; month++) {
+                    String monthYear = String.format(Locale.US, "%02d-%04d", month, year);
+                    if (!listData.containsKey(monthYear)) {
+                        listData.put(monthYear, 0.0);
+                    }
+                }
+            }
+        }
+        return listData;
     }
 }

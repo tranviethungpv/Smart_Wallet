@@ -6,11 +6,13 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.example.smartwallet.databinding.FragmentHomeBinding;
 import com.example.smartwallet.model.Wallet;
 import com.example.smartwallet.viewmodel.WalletViewModel;
@@ -20,7 +22,7 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding fragmentHomeBinding;
     private TextView totalBalance;
     private ImageView showHide;
-    private boolean isShow = true;
+    private boolean isShow = false;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

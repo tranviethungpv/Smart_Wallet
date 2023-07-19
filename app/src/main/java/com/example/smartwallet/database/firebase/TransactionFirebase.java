@@ -2,6 +2,7 @@ package com.example.smartwallet.database.firebase;
 
 import static android.content.ContentValues.TAG;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -11,7 +12,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -72,44 +73,44 @@ public class TransactionFirebase {
         CollectionReference docRef = firestore.collection("transactions");
 
         docRef.get().addOnSuccessListener(task -> {
-                Map<String, Double> monthlyTotals = new HashMap<>();
+            Map<String, Double> monthlyTotals = new HashMap<>();
 
-                for (DocumentSnapshot snapshot : task.getDocuments()) {
-                    // Get the timestamp field
-                    Object timestampObj = snapshot.get("date");
+            for (DocumentSnapshot snapshot : task.getDocuments()) {
+                // Get the timestamp field
+                Object timestampObj = snapshot.get("date");
 
-                    if (timestampObj != null) {
-                        // Convert the timestamp to a Date object
-                        Date transactionDate = ((Timestamp) timestampObj).toDate();
+                if (timestampObj != null) {
+                    // Convert the timestamp to a Date object
+                    Date transactionDate = ((Timestamp) timestampObj).toDate();
 
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.setTime(transactionDate);
-                        int month = calendar.get(Calendar.MONTH) + 1; // Adding 1 to get the month in 1-based index
-                        int year = calendar.get(Calendar.YEAR);
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(transactionDate);
+                    int month = calendar.get(Calendar.MONTH) + 1; // Adding 1 to get the month in 1-based index
+                    int year = calendar.get(Calendar.YEAR);
 
-                        // Get the amount field
-                        Object amountObj = snapshot.get("amount");
-                        // Get the type field
-                        Object typeObj = snapshot.get("type");
-                        Boolean type = (Boolean) typeObj;
-                        if (Boolean.TRUE.equals(type)) {
-                            if (amountObj != null) {
-                                double amount = (double) amountObj;
+                    // Get the amount field
+                    Object amountObj = snapshot.get("amount");
+                    // Get the type field
+                    Object typeObj = snapshot.get("type");
+                    Boolean type = (Boolean) typeObj;
+                    if (Boolean.TRUE.equals(type)) {
+                        if (amountObj != null) {
+                            double amount = (double) amountObj;
 
-                                // Update the total amount for the corresponding month
-                                String monthKey = month + "-" + year;
-                                Double currentTotal = monthlyTotals.get(monthKey);
-                                if (currentTotal != null) {
-                                    currentTotal += amount;
-                                } else {
-                                    currentTotal = amount;
-                                }
-                                monthlyTotals.put(monthKey, currentTotal);
+                            // Update the total amount for the corresponding month
+                            @SuppressLint("DefaultLocale") String monthKey = String.format("%02d-%04d", month, year);
+                            Double currentTotal = monthlyTotals.get(monthKey);
+                            if (currentTotal != null) {
+                                currentTotal += amount;
+                            } else {
+                                currentTotal = amount;
                             }
+                            monthlyTotals.put(monthKey, currentTotal);
                         }
                     }
                 }
-                totalAmountByMonth.setValue(monthlyTotals);
+            }
+            totalAmountByMonth.setValue(monthlyTotals);
         }).addOnFailureListener(e -> Log.d(TAG, "get failed with ", e));
         return totalAmountByMonth;
     }

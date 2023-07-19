@@ -65,7 +65,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/show"
+                android:src="@drawable/hidden"
                 tools:ignore="ContentDescription" />
 
         </LinearLayout>

@@ -45,10 +45,10 @@
         app:layout_constraintStart_toEndOf="@+id/textViewTotalPaidTitle"
         app:layout_constraintTop_toBottomOf="@id/textViewPrice" />
 
-    <com.github.mikephil.charting.charts.LineChart
+    <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/chartReportByMonth"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="250dp"
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
