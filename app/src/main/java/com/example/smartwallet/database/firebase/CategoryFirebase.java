@@ -33,5 +33,4 @@ public class CategoryFirebase {
 
         return categoriesLiveData;
     }
-
 }

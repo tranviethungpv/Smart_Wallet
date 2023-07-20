@@ -7,7 +7,6 @@ import com.example.smartwallet.model.Category;
 import com.example.smartwallet.repository.CategoryRepository;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CategoryViewModel extends ViewModel {
     private final CategoryRepository categoryRepository;

@@ -6,7 +6,6 @@ import com.example.smartwallet.database.firebase.CategoryFirebase;
 import com.example.smartwallet.model.Category;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CategoryRepository {
     private final CategoryFirebase categoryFirebase;

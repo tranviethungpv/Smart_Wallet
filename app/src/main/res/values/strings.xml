@@ -59,4 +59,5 @@
     <string name="total_paid">Tổng đã chi tháng này </string>
     <string name="up_down"> tăng/giảm</string>
     <string name="overview">Tổng quan</string>
+    <string name="most_category_index">1</string>
 </resources>

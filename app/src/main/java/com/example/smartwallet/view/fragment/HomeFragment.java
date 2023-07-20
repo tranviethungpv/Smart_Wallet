@@ -35,6 +35,7 @@ public class HomeFragment extends Fragment {
         generateTotalBalance();
         processShowHide();
         displayReport();
+        displayMostCategoryByTransaction();
 
         return rootView;
     }
@@ -74,5 +75,11 @@ public class HomeFragment extends Fragment {
             isShow = !isShow;
             generateTotalBalance();
         });
+    }
+
+    private void displayMostCategoryByTransaction() {
+        MostlyTransactionFragment mostlyTransactionFragment = new MostlyTransactionFragment();
+        int layoutMostTransactionId = fragmentHomeBinding.layoutMostlyTransaction.getId();
+        getChildFragmentManager().beginTransaction().replace(layoutMostTransactionId, mostlyTransactionFragment).commit();
     }
 }
