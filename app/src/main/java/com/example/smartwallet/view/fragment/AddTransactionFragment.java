@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,7 @@ public class AddTransactionFragment extends Fragment {
     private String selectedWalletId;
     private String selectedCategoryId;
     private Boolean selectedRadio;
+    private SessionManager sessionManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,13 +67,13 @@ public class AddTransactionFragment extends Fragment {
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         transactionViewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
         walletViewModel = new ViewModelProvider(this).get(WalletViewModel.class);
+        sessionManager = new SessionManager(requireContext());
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         fragmentAddTransactionBinding = FragmentAddTransactionBinding.inflate(inflater, container, false);
 
-        SessionManager sessionManager = new SessionManager(requireContext());
 
         dateTimeEditText = fragmentAddTransactionBinding.dateEditText;
         inputMoney = fragmentAddTransactionBinding.editTextNumberDecimal;
@@ -108,6 +110,7 @@ public class AddTransactionFragment extends Fragment {
                 if (checkInput()) {
                     Transaction transaction = new Transaction(sessionManager.getUsername(), selectedWalletId, selectedCategoryId, Float.parseFloat(inputMoney.getText().toString().trim()), inputDetail.getText().toString().trim(), selectedRadio, timestamp);
                     transactionViewModel.addTransaction(transaction).observe(getViewLifecycleOwner(), result -> {
+                        updateWalletBalance(selectedWalletId, Float.parseFloat(inputMoney.getText().toString().trim()));
                         if (result) {
                             Toast.makeText(requireContext(), "Thêm thành công", Toast.LENGTH_SHORT).show();
                             clearInput();
@@ -157,7 +160,7 @@ public class AddTransactionFragment extends Fragment {
 
     private void fillCategoriesSpinner() {
         spinnerCategory = fragmentAddTransactionBinding.spinnerCategory;
-        categoryViewModel.getAllCategories().observe(getViewLifecycleOwner(), categories -> {
+        categoryViewModel.getAllCategories(sessionManager.getUsername()).observe(getViewLifecycleOwner(), categories -> {
             List<String> categoryNames = new ArrayList<>();
             Map<String, String> categoryIds = new HashMap<>();
             for (Category category : categories) {
@@ -184,7 +187,7 @@ public class AddTransactionFragment extends Fragment {
 
     private void fillWalletsSpinner() {
         spinnerWallet = fragmentAddTransactionBinding.spinnerWallet;
-        walletViewModel.getAllWallets().observe(getViewLifecycleOwner(), wallets -> {
+        walletViewModel.getAllWallets(sessionManager.getUsername()).observe(getViewLifecycleOwner(), wallets -> {
             List<String> walletNames = new ArrayList<>();
             Map<String, String> walletIds = new HashMap<>();
             for (Wallet wallet : wallets) {
@@ -247,5 +250,28 @@ public class AddTransactionFragment extends Fragment {
             formattedDateTime = currentDateTime.format(formatter);
         }
         dateTimeEditText.setText(formattedDateTime);
+    }
+
+    private void updateWalletBalance(String walletId, Float price) {
+        walletViewModel.getAllWallets(sessionManager.getUsername()).observe(getViewLifecycleOwner(), listWallets -> {
+            Wallet updatedWallet;
+            for (Wallet wallet : listWallets) {
+                if (Objects.equals(wallet.getId(), walletId)) {
+                    if (selectedRadio) {
+                        updatedWallet = new Wallet(wallet.getId(), wallet.getBalance() - price, wallet.getName(), wallet.getUserId());
+                    } else {
+                        updatedWallet = new Wallet(wallet.getId(), wallet.getBalance() + price, wallet.getName(), wallet.getUserId());
+                    }
+                    walletViewModel.updateWallet(updatedWallet).observe(getViewLifecycleOwner(), result -> {
+                        if (result) {
+                            Log.d("Log", "Updated complete");
+                        } else {
+                            Log.d("Log", "Update failed");
+                        }
+                    });
+                }
+            }
+
+        });
     }
 }

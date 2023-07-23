@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -24,12 +25,14 @@ import com.example.smartwallet.databinding.FragmentTransactionBinding;
 import com.example.smartwallet.model.Category;
 import com.example.smartwallet.model.Transaction;
 import com.example.smartwallet.model.Wallet;
+import com.example.smartwallet.utils.SessionManager;
 import com.example.smartwallet.viewmodel.CategoryViewModel;
 import com.example.smartwallet.viewmodel.TransactionViewModel;
 import com.example.smartwallet.viewmodel.WalletViewModel;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Objects;
 
 public class TransactionFragment extends Fragment {
     private FragmentTransactionBinding fragmentTransactionBinding;
@@ -39,12 +42,16 @@ public class TransactionFragment extends Fragment {
     private ArrayList<Wallet> walletList;
     private ArrayList<Category> categoryList;
     private Transaction longPressedTransaction = new Transaction();
+    private SessionManager sessionManager;
+    private WalletViewModel walletViewModel;
+    private CategoryViewModel categoryViewModel;
 
     public TransactionFragment() {
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        sessionManager = new SessionManager(requireContext());
         fragmentTransactionBinding = FragmentTransactionBinding.inflate(inflater, container, false);
 
         renderListTransaction();
@@ -60,36 +67,42 @@ public class TransactionFragment extends Fragment {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
         recyclerViewTransaction.addItemDecoration(dividerItemDecoration);
 
-        WalletViewModel walletViewModel = new ViewModelProvider(this).get(WalletViewModel.class);
-        CategoryViewModel categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        walletViewModel = new ViewModelProvider(this).get(WalletViewModel.class);
+        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         transactionViewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
 
-        transactionViewModel.getAllTransactions().observe(getViewLifecycleOwner(), transactionArrayList -> {
+        transactionViewModel.getAllTransactions(sessionManager.getUsername()).observe(getViewLifecycleOwner(), transactionArrayList -> {
             // Sort list by Timestamp
             Comparator<Transaction> descendingComparator = Comparator.comparing(Transaction::getDate).reversed();
             transactionArrayList.sort(descendingComparator);
 
-            // Observe wallet and category data to retrieve the lists
-            walletViewModel.getAllWallets().observe(getViewLifecycleOwner(), wallets -> {
-                if (wallets != null) {
-                    walletList = new ArrayList<>(wallets);
+            if (transactionArrayList.size() == 0) {
+                fragmentTransactionBinding.textViewDataStatus.setVisibility(View.VISIBLE);
+            } else {
+                fragmentTransactionBinding.recyclerTransaction.setVisibility(View.VISIBLE);
 
-                    categoryViewModel.getAllCategories().observe(getViewLifecycleOwner(), categories -> {
-                        if (categories != null) {
-                            categoryList = new ArrayList<>(categories);
-                            transactionAdapter = new TransactionAdapter(transactionArrayList, (transaction, isLongClick) -> {
-                                if (!isLongClick) {
-                                    switchToUpdateTransactionFragment();
-                                }
-                                if (isLongClick) {
-                                    showContextMenu(transaction);
-                                }
-                            }, walletList, categoryList);
-                            recyclerViewTransaction.setAdapter(transactionAdapter);
-                        }
-                    });
-                }
-            });
+                // Observe wallet and category data to retrieve the lists
+                walletViewModel.getAllWallets(sessionManager.getUsername()).observe(getViewLifecycleOwner(), wallets -> {
+                    if (wallets != null) {
+                        walletList = new ArrayList<>(wallets);
+
+                        categoryViewModel.getAllCategories(sessionManager.getUsername()).observe(getViewLifecycleOwner(), categories -> {
+                            if (categories != null) {
+                                categoryList = new ArrayList<>(categories);
+                                transactionAdapter = new TransactionAdapter(transactionArrayList, (transaction, isLongClick) -> {
+                                    if (!isLongClick) {
+                                        switchToUpdateTransactionFragment();
+                                    }
+                                    if (isLongClick) {
+                                        showContextMenu(transaction);
+                                    }
+                                }, walletList, categoryList);
+                                recyclerViewTransaction.setAdapter(transactionAdapter);
+                            }
+                        });
+                    }
+                });
+            }
         });
     }
 
@@ -109,6 +122,7 @@ public class TransactionFragment extends Fragment {
             switchToUpdateTransactionFragment();
         } else if (item.getItemId() == R.id.delete_item) {
             transactionViewModel.deleteTransaction(longPressedTransaction).observe(getViewLifecycleOwner(), result -> {
+                updateWalletBalance(longPressedTransaction);
                 if (result) {
                     Toast.makeText(requireContext(), "Xoá thành công " + longPressedTransaction.getDetail() + "!", Toast.LENGTH_SHORT).show();
                     renderListTransaction();
@@ -142,5 +156,27 @@ public class TransactionFragment extends Fragment {
         updateTaxiFragment.setArguments(bundle);
 
         getParentFragmentManager().beginTransaction().replace(R.id.container, updateTaxiFragment).addToBackStack(null).commit();
+    }
+
+    private void updateWalletBalance(Transaction changedTransaction) {
+        walletViewModel.getAllWallets(sessionManager.getUsername()).observe(getViewLifecycleOwner(), listWallets -> {
+            Wallet updatedWallet;
+            for (Wallet wallet : listWallets) {
+                if (Objects.equals(wallet.getId(), changedTransaction.getWalletId())) {
+                    if (changedTransaction.getType()) {
+                        updatedWallet = new Wallet(wallet.getId(), wallet.getBalance() + changedTransaction.getAmount(), wallet.getName(), wallet.getUserId());
+                    } else {
+                        updatedWallet = new Wallet(wallet.getId(), wallet.getBalance() - changedTransaction.getAmount(), wallet.getName(), wallet.getUserId());
+                    }
+                    walletViewModel.updateWallet(updatedWallet).observe(getViewLifecycleOwner(), result -> {
+                        if (result) {
+                            Log.d("Log", "Updated complete");
+                        } else {
+                            Log.d("Log", "Update failed");
+                        }
+                    });
+                }
+            }
+        });
     }
 }

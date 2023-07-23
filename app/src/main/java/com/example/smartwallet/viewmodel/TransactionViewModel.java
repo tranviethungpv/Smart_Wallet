@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.smartwallet.model.Transaction;
 import com.example.smartwallet.repository.TransactionRepository;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -19,8 +20,8 @@ public class TransactionViewModel extends ViewModel {
         return transactionRepository.addTransaction(transaction);
     }
 
-    public MutableLiveData<ArrayList<Transaction>> getAllTransactions() {
-        return transactionRepository.getAllTransactions();
+    public MutableLiveData<ArrayList<Transaction>> getAllTransactions(String userId) {
+        return transactionRepository.getAllTransactions(userId);
     }
 
     public MutableLiveData<Boolean> deleteTransaction(Transaction transaction) {
@@ -31,7 +32,7 @@ public class TransactionViewModel extends ViewModel {
         return transactionRepository.updateTransaction(transaction);
     }
 
-    public MutableLiveData<Map<String, Double>> calculateTotalAmountByMonth() {
-        return transactionRepository.calculateTotalAmountByMonth();
+    public MutableLiveData<Map<String, Double>> calculateTotalAmountByMonth(String userId) {
+        return transactionRepository.calculateTotalAmountByMonth(userId);
     }
 }

@@ -17,6 +17,7 @@ import com.example.smartwallet.adapter.MostTransactionAdapter;
 import com.example.smartwallet.databinding.FragmentMostlyTransactionBinding;
 import com.example.smartwallet.model.Category;
 import com.example.smartwallet.model.Transaction;
+import com.example.smartwallet.utils.SessionManager;
 import com.example.smartwallet.viewmodel.CategoryViewModel;
 import com.example.smartwallet.viewmodel.TransactionViewModel;
 
@@ -27,9 +28,11 @@ public class MostlyTransactionFragment extends Fragment {
     private FragmentMostlyTransactionBinding fragmentMostlyTransactionBinding;
     private MostTransactionAdapter mostTransactionAdapter;
     private RecyclerView recyclerViewCategoryByTransaction;
+    private SessionManager sessionManager;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        sessionManager = new SessionManager(requireContext());
         fragmentMostlyTransactionBinding = FragmentMostlyTransactionBinding.inflate(inflater, container, false);
 
         generateRecyclerView();
@@ -46,39 +49,45 @@ public class MostlyTransactionFragment extends Fragment {
 
         CategoryViewModel categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         TransactionViewModel transactionViewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
-        categoryViewModel.getAllCategories().observe(getViewLifecycleOwner(), listCategories -> transactionViewModel.getAllTransactions().observe(getViewLifecycleOwner(), listTransactions -> {
-            double totalAmount = 0;
-            for (Transaction transaction : listTransactions) {
-                if (transaction.getType()) {
-                    totalAmount += transaction.getAmount();
-                }
-            }
-
-            ArrayList<CategoryByTransaction> categoryProportions = new ArrayList<>();
-            for (Category category : listCategories) {
-                double categoryAmount = 0;
+        categoryViewModel.getAllCategories(sessionManager.getUsername()).observe(getViewLifecycleOwner(), listCategories -> transactionViewModel.getAllTransactions(sessionManager.getUsername()).observe(getViewLifecycleOwner(), listTransactions -> {
+            if (listTransactions.size() == 0 || listCategories.size() == 0) {
+                fragmentMostlyTransactionBinding.textViewDataStatus.setVisibility(View.VISIBLE);
+            } else {
+                fragmentMostlyTransactionBinding.recyclerMostlyTransaction.setVisibility(View.VISIBLE);
+                double totalAmount = 0;
                 for (Transaction transaction : listTransactions) {
-                    if (transaction.getCategoryId().equals(category.getId()) && transaction.getType()) {
-                        categoryAmount += transaction.getAmount();
+                    if (transaction.getType()) {
+                        totalAmount += transaction.getAmount();
                     }
                 }
-                int proportion = (int) Math.round((categoryAmount / totalAmount) * 100);
-                CategoryByTransaction entry = new CategoryByTransaction(category.getName(), categoryAmount, proportion);
 
-                categoryProportions.add(entry);
+                ArrayList<CategoryByTransaction> categoryProportions = new ArrayList<>();
+                for (Category category : listCategories) {
+                    double categoryAmount = 0;
+                    for (Transaction transaction : listTransactions) {
+                        if (transaction.getCategoryId().equals(category.getId()) && transaction.getType()) {
+                            categoryAmount += transaction.getAmount();
+                        }
+                    }
+                    int proportion = (int) Math.round((categoryAmount / totalAmount) * 100);
+                    CategoryByTransaction entry = new CategoryByTransaction(category.getName(), categoryAmount, proportion);
+
+                    categoryProportions.add(entry);
+                }
+
+
+                // Sort by Proportion
+                Comparator<CategoryByTransaction> comparator = (entry1, entry2) -> {
+                    // Sort in descending order
+                    return Double.compare(entry2.getProportion(), entry1.getProportion());
+                };
+                categoryProportions.sort(comparator);
+                if (categoryProportions.size() > 0) {
+                    ArrayList<CategoryByTransaction> cutList = new ArrayList<>(categoryProportions.subList(0, 6));
+                    mostTransactionAdapter = new MostTransactionAdapter(cutList);
+                    recyclerViewCategoryByTransaction.setAdapter(mostTransactionAdapter);
+                }
             }
-
-
-            // Sort by Proportion
-            Comparator<CategoryByTransaction> comparator = (entry1, entry2) -> {
-                // Sort in descending order
-                return Double.compare(entry2.getProportion(), entry1.getProportion());
-            };
-            categoryProportions.sort(comparator);
-            ArrayList<CategoryByTransaction> cutList = new ArrayList<>(categoryProportions.subList(0, 6));
-
-            mostTransactionAdapter = new MostTransactionAdapter(cutList);
-            recyclerViewCategoryByTransaction.setAdapter(mostTransactionAdapter);
         }));
     }
 

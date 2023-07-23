@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,7 @@ public class UpdateTransactionFragment extends Fragment {
     private Transaction selectedTransaction;
     private String selectedWalletId;
     private String selectedCategoryId;
+    private SessionManager sessionManager;
 
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,13 +69,12 @@ public class UpdateTransactionFragment extends Fragment {
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         walletViewModel = new ViewModelProvider(this).get(WalletViewModel.class);
         transactionViewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
+        sessionManager = new SessionManager(requireContext());
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         fragmentUpdateTransactionBinding = FragmentUpdateTransactionBinding.inflate(inflater, container, false);
-
-        SessionManager sessionManager = new SessionManager(requireContext());
 
         dateTimeEditText = fragmentUpdateTransactionBinding.dateEditText;
         inputMoney = fragmentUpdateTransactionBinding.editTextNumberDecimal;
@@ -106,8 +107,10 @@ public class UpdateTransactionFragment extends Fragment {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 Timestamp timestamp = GlobalFunction.convertLocalDateTimeToTimestamp(Objects.requireNonNull(dateTimeEditText.getText()).toString().trim());
                 if (checkInput()) {
+
                     Transaction transaction = new Transaction(selectedTransaction.getId(), sessionManager.getUsername(), selectedWalletId, selectedCategoryId, Float.parseFloat(inputMoney.getText().toString().trim()), inputDetail.getText().toString().trim(), selectedRadio, timestamp);
                     transactionViewModel.updateTransaction(transaction).observe(getViewLifecycleOwner(), result -> {
+                        updateWalletBalance(selectedTransaction, transaction);
                         if (result) {
                             Toast.makeText(requireContext(), "Cập nhật thành công", Toast.LENGTH_SHORT).show();
                         } else {
@@ -156,7 +159,7 @@ public class UpdateTransactionFragment extends Fragment {
 
     private void fillCategoriesSpinner() {
         spinnerCategory = fragmentUpdateTransactionBinding.spinnerCategory;
-        categoryViewModel.getAllCategories().observe(getViewLifecycleOwner(), categories -> {
+        categoryViewModel.getAllCategories(sessionManager.getUsername()).observe(getViewLifecycleOwner(), categories -> {
             List<String> categoryNames = new ArrayList<>();
             Map<String, String> categoryIds = new HashMap<>();
             int selectedPosition = 0; // Track the position of the selected category
@@ -194,7 +197,7 @@ public class UpdateTransactionFragment extends Fragment {
 
     private void fillWalletsSpinner() {
         spinnerWallet = fragmentUpdateTransactionBinding.spinnerWallet;
-        walletViewModel.getAllWallets().observe(getViewLifecycleOwner(), wallets -> {
+        walletViewModel.getAllWallets(sessionManager.getUsername()).observe(getViewLifecycleOwner(), wallets -> {
             List<String> walletNames = new ArrayList<>();
             Map<String, String> walletIds = new HashMap<>();
             int selectedPosition = 0; // Track the position of the selected wallet
@@ -284,5 +287,40 @@ public class UpdateTransactionFragment extends Fragment {
         }
 
         return true;
+    }
+
+    private void updateWalletBalance(Transaction unchangedTransaction, Transaction changedTransaction) {
+        walletViewModel.getAllWallets(sessionManager.getUsername()).observe(getViewLifecycleOwner(), listWallets -> {
+            Wallet updatedWallet;
+            for (Wallet wallet : listWallets) {
+                if (Objects.equals(wallet.getId(), changedTransaction.getWalletId())) {
+                    Float difference = Math.abs(unchangedTransaction.getAmount() - changedTransaction.getAmount());
+                    if (changedTransaction.getType()) {
+                        if (changedTransaction.getAmount() < unchangedTransaction.getAmount()) {
+                            updatedWallet = new Wallet(wallet.getId(), wallet.getBalance() + difference, wallet.getName(), wallet.getUserId());
+                        } else if (changedTransaction.getAmount() > unchangedTransaction.getAmount()) {
+                            updatedWallet = new Wallet(wallet.getId(), wallet.getBalance() - difference, wallet.getName(), wallet.getUserId());
+                        } else {
+                            updatedWallet = new Wallet(wallet.getId(), wallet.getBalance(), wallet.getName(), wallet.getUserId());
+                        }
+                    } else {
+                        if (changedTransaction.getAmount() < unchangedTransaction.getAmount()) {
+                            updatedWallet = new Wallet(wallet.getId(), wallet.getBalance() - difference, wallet.getName(), wallet.getUserId());
+                        } else if (changedTransaction.getAmount() > unchangedTransaction.getAmount()) {
+                            updatedWallet = new Wallet(wallet.getId(), wallet.getBalance() + difference, wallet.getName(), wallet.getUserId());
+                        } else {
+                            updatedWallet = new Wallet(wallet.getId(), wallet.getBalance(), wallet.getName(), wallet.getUserId());
+                        }
+                    }
+                    walletViewModel.updateWallet(updatedWallet).observe(getViewLifecycleOwner(), result -> {
+                        if (result) {
+                            Log.d("Log", "Updated complete");
+                        } else {
+                            Log.d("Log", "Update failed");
+                        }
+                    });
+                }
+            }
+        });
     }
 }

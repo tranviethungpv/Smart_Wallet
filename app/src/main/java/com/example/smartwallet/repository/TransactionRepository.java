@@ -19,8 +19,8 @@ public class TransactionRepository {
         return transactionFirebase.addTransaction(transaction);
     }
 
-    public MutableLiveData<ArrayList<Transaction>> getAllTransactions() {
-        return transactionFirebase.getAllTransactions();
+    public MutableLiveData<ArrayList<Transaction>> getAllTransactions(String userId) {
+        return transactionFirebase.getAllTransactions(userId);
     }
 
     public MutableLiveData<Boolean> deleteTransaction(Transaction transaction) {
@@ -31,7 +31,7 @@ public class TransactionRepository {
         return transactionFirebase.updateTransaction(transaction);
     }
 
-    public MutableLiveData<Map<String, Double>> calculateTotalAmountByMonth() {
-        return transactionFirebase.calculateTotalAmountByMonth();
+    public MutableLiveData<Map<String, Double>> calculateTotalAmountByMonth(String userId) {
+        return transactionFirebase.calculateTotalAmountByMonth(userId);
     }
 }

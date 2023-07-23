@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.smartwallet.databinding.FragmentHomeBinding;
 import com.example.smartwallet.model.Wallet;
+import com.example.smartwallet.utils.SessionManager;
 import com.example.smartwallet.viewmodel.WalletViewModel;
 import com.example.smartwallet.R;
 
@@ -23,9 +24,11 @@ public class HomeFragment extends Fragment {
     private TextView totalBalance;
     private ImageView showHide;
     private boolean isShow = false;
+    private SessionManager sessionManager;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        sessionManager = new SessionManager(requireContext());
         fragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false);
         View rootView = fragmentHomeBinding.getRoot();
 
@@ -44,7 +47,7 @@ public class HomeFragment extends Fragment {
     private void generateTotalBalance() {
         WalletViewModel walletViewModel = new ViewModelProvider(this).get(WalletViewModel.class);
 
-        walletViewModel.getAllWallets().observe(getViewLifecycleOwner(), wallets -> {
+        walletViewModel.getAllWallets(sessionManager.getUsername()).observe(getViewLifecycleOwner(), wallets -> {
             double totalBalanceValue = 0;
             for (Wallet wallet : wallets) {
                 totalBalanceValue += wallet.getBalance();

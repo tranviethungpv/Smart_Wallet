@@ -40,12 +40,12 @@ public class TransactionFirebase {
         return addedCompletely;
     }
 
-    public MutableLiveData<ArrayList<Transaction>> getAllTransactions() {
+    public MutableLiveData<ArrayList<Transaction>> getAllTransactions(String userId) {
         MutableLiveData<ArrayList<Transaction>> transactionsLiveData = new MutableLiveData<>();
         CollectionReference docRef = firestore.collection("transactions");
         ArrayList<Transaction> transactions = new ArrayList<>();
 
-        docRef.get().addOnSuccessListener(querySnapshot -> {
+        docRef.whereEqualTo("userId", userId).get().addOnSuccessListener(querySnapshot -> {
             for (DocumentSnapshot snapshot : querySnapshot.getDocuments()) {
                 Transaction transaction = snapshot.toObject(Transaction.class);
                 transactions.add(transaction);
@@ -69,10 +69,10 @@ public class TransactionFirebase {
         return updatedCompletely;
     }
 
-    public MutableLiveData<Map<String, Double>> calculateTotalAmountByMonth() {
+    public MutableLiveData<Map<String, Double>> calculateTotalAmountByMonth(String userId) {
         CollectionReference docRef = firestore.collection("transactions");
 
-        docRef.get().addOnSuccessListener(task -> {
+        docRef.whereEqualTo("userId", userId).get().addOnSuccessListener(task -> {
             Map<String, Double> monthlyTotals = new HashMap<>();
 
             for (DocumentSnapshot snapshot : task.getDocuments()) {

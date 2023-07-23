@@ -14,7 +14,7 @@ public class CategoryRepository {
         this.categoryFirebase = new CategoryFirebase();
     }
 
-    public MutableLiveData<ArrayList<Category>> getAllCategories() {
-        return categoryFirebase.getAllCategories();
+    public MutableLiveData<ArrayList<Category>> getAllCategories(String userId) {
+        return categoryFirebase.getAllCategories(userId);
     }
 }

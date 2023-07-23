@@ -15,7 +15,7 @@ public class CategoryViewModel extends ViewModel {
         categoryRepository = new CategoryRepository();
     }
 
-    public MutableLiveData<ArrayList<Category>> getAllCategories() {
-        return categoryRepository.getAllCategories();
+    public MutableLiveData<ArrayList<Category>> getAllCategories(String userId) {
+        return categoryRepository.getAllCategories(userId);
     }
 }

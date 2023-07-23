@@ -7,12 +7,26 @@
     android:layout_height="match_parent"
     tools:context=".view.fragment.MostlyTransactionFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerMostlyTransaction"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/textViewDataStatus"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/no_data"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerMostlyTransaction"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </androidx.recyclerview.widget.RecyclerView>
 </androidx.constraintlayout.widget.ConstraintLayout>

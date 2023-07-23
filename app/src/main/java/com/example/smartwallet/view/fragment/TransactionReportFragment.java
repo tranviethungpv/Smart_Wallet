@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.example.smartwallet.GlobalFunction;
 import com.example.smartwallet.R;
 import com.example.smartwallet.databinding.FragmentTransactionReportBinding;
+import com.example.smartwallet.utils.SessionManager;
 import com.example.smartwallet.viewmodel.TransactionViewModel;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -34,11 +35,13 @@ import java.util.TreeMap;
 public class TransactionReportFragment extends Fragment {
     private FragmentTransactionReportBinding fragmentTransactionReportBinding;
     private TransactionViewModel transactionViewModel;
+    private SessionManager sessionManager;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         fragmentTransactionReportBinding = FragmentTransactionReportBinding.inflate(inflater, container, false);
         transactionViewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
+        sessionManager = new SessionManager(requireContext());
 
         generateDateTime();
         processOverview();
@@ -58,7 +61,7 @@ public class TransactionReportFragment extends Fragment {
 
     @SuppressLint({"ResourceAsColor", "SetTextI18n"})
     private void processOverview() {
-        transactionViewModel.calculateTotalAmountByMonth().observe(getViewLifecycleOwner(), listAmountByMonth -> {
+        transactionViewModel.calculateTotalAmountByMonth(sessionManager.getUsername()).observe(getViewLifecycleOwner(), listAmountByMonth -> {
             Map<String, Double> fullExpenditureData = GlobalFunction.generateBlankValue(listAmountByMonth);
 
             NavigableMap<String, Double> sortedMap = new TreeMap<>(new GlobalFunction.MonthYearComparator());
@@ -73,6 +76,13 @@ public class TransactionReportFragment extends Fragment {
 
             TextView textViewPrice = fragmentTransactionReportBinding.textViewPrice;
             TextView textViewTotalPaidValue = fragmentTransactionReportBinding.textViewTotalPaidValue;
+            TextView textViewDataStatus = fragmentTransactionReportBinding.textViewDataStatus;
+
+            if (listAmountByMonth.size() == 0) {
+                textViewTotalPaidValue.setVisibility(View.GONE);
+                textViewDataStatus.setVisibility(View.VISIBLE);
+            }
+
             if (value != null) {
                 textViewPrice.setText(String.valueOf(value));
                 Double previousValue = sortedMap.get(sortedMap.lowerKey(key));
@@ -118,7 +128,7 @@ public class TransactionReportFragment extends Fragment {
         // Create a list to hold the bar entries
         List<BarEntry> barEntries = new ArrayList<>();
 
-        transactionViewModel.calculateTotalAmountByMonth().observe(getViewLifecycleOwner(), listAmountByMonth -> {
+        transactionViewModel.calculateTotalAmountByMonth(sessionManager.getUsername()).observe(getViewLifecycleOwner(), listAmountByMonth -> {
             Map<String, Double> fullExpenditureData = GlobalFunction.generateBlankValue(listAmountByMonth);
 
             //Sort totalExpenditureMap
