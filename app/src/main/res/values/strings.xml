@@ -73,4 +73,6 @@
     <string name="transaction_detail">Chi tiết giao dịch</string>
     <string name="date_time">Ngày tháng năm</string>
     <string name="wallet_detail">Thông tin ví</string>
+    <string name="my_category">Danh mục</string>
+    <string name="add_new_category">Thêm danh mục mới</string>
 </resources>

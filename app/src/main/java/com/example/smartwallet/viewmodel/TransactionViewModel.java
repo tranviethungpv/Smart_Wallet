@@ -16,12 +16,12 @@ public class TransactionViewModel extends ViewModel {
         this.transactionRepository = new TransactionRepository();
     }
 
-    public MutableLiveData<Boolean> addTransaction(Transaction transaction) {
-        return transactionRepository.addTransaction(transaction);
-    }
-
     public MutableLiveData<ArrayList<Transaction>> getAllTransactions(String userId) {
         return transactionRepository.getAllTransactions(userId);
+    }
+
+    public MutableLiveData<Boolean> addTransaction(Transaction transaction) {
+        return transactionRepository.addTransaction(transaction);
     }
 
     public MutableLiveData<Boolean> deleteTransaction(Transaction transaction) {

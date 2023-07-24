@@ -1,66 +1,122 @@
 package com.example.smartwallet.view.fragment.category;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.smartwallet.R;
+import com.example.smartwallet.adapter.CategoryAdapter;
+import com.example.smartwallet.databinding.FragmentCategoryBinding;
+import com.example.smartwallet.model.Category;
+import com.example.smartwallet.utils.SessionManager;
+import com.example.smartwallet.viewmodel.CategoryViewModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CategoryFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class CategoryFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private FragmentCategoryBinding fragmentCategoryBinding;
+    private CategoryAdapter categoryAdapter;
+    private CategoryViewModel categoryViewModel;
+    private RecyclerView recyclerViewCategory;
+    private Category longPressedCategory = new Category();
+    private SessionManager sessionManager;
 
     public CategoryFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CategoryFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CategoryFragment newInstance(String param1, String param2) {
-        CategoryFragment fragment = new CategoryFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        sessionManager = new SessionManager(requireContext());
+        fragmentCategoryBinding = FragmentCategoryBinding.inflate(inflater, container, false);
+
+        renderListWallet();
+        registerForContextMenu(recyclerViewCategory);
+
+        TextView addButton = fragmentCategoryBinding.textView;
+        addButton.setOnClickListener(v -> getParentFragmentManager().beginTransaction().replace(R.id.container, new AddCategoryFragment()).addToBackStack(null).commit());
+        return fragmentCategoryBinding.getRoot();
+    }
+
+    private void renderListWallet() {
+        recyclerViewCategory = fragmentCategoryBinding.recyclerCategory;
+        recyclerViewCategory.setLayoutManager(new GridLayoutManager(requireActivity(), 1));
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
+        recyclerViewCategory.addItemDecoration(dividerItemDecoration);
+
+        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+
+        categoryViewModel.getAllCategories(sessionManager.getUsername()).observe(getViewLifecycleOwner(), categoryArrayList -> {
+            if (categoryArrayList.size() == 0) {
+                fragmentCategoryBinding.textViewDataStatus.setVisibility(View.VISIBLE);
+            } else {
+                fragmentCategoryBinding.recyclerCategory.setVisibility(View.VISIBLE);
+                categoryAdapter = new CategoryAdapter(categoryArrayList, (category, isLongClick) -> {
+                    if (isLongClick) {
+                        showContextMenu(category);
+                    }
+                });
+                recyclerViewCategory.setAdapter(categoryAdapter);
+            }
+        });
+    }
+
+    @Override
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        MenuInflater inflater = requireActivity().getMenuInflater();
+        inflater.inflate(R.menu.hold_menu, menu);
+        menu.setHeaderTitle(longPressedCategory.getName());
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.edit_item) {
+            switchToUpdateCategoryFragment();
+        } else if (item.getItemId() == R.id.delete_item) {
+            categoryViewModel.deleteCategory(longPressedCategory).observe(getViewLifecycleOwner(), result -> {
+                if (result) {
+                    Toast.makeText(requireContext(), "Xoá thành công " + longPressedCategory.getName() + "!", Toast.LENGTH_SHORT).show();
+                    renderListWallet();
+                } else {
+                    Toast.makeText(requireContext(), "Xảy ra lỗi khi xoá " + longPressedCategory.getName() + "!", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
+        return super.onContextItemSelected(item);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_category, container, false);
+    private void showContextMenu(Category category) {
+        longPressedCategory = category;
+        recyclerViewCategory.showContextMenu();
+    }
+
+    private void switchToUpdateCategoryFragment() {
+        UpdateCategoryFragment updateCategoryFragment = new UpdateCategoryFragment();
+
+        Bundle bundle = new Bundle();
+        if (longPressedCategory.getId() != null) {
+            bundle.putString("id", longPressedCategory.getId());
+            bundle.putString("userId", longPressedCategory.getUserId());
+            bundle.putString("name", longPressedCategory.getName());
+        }
+        updateCategoryFragment.setArguments(bundle);
+
+        getParentFragmentManager().beginTransaction().replace(R.id.container, updateCategoryFragment).addToBackStack(null).commit();
     }
 }

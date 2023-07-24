@@ -17,4 +17,16 @@ public class CategoryRepository {
     public MutableLiveData<ArrayList<Category>> getAllCategories(String userId) {
         return categoryFirebase.getAllCategories(userId);
     }
+
+    public MutableLiveData<Boolean> addCategory(Category category) {
+        return categoryFirebase.addCategory(category);
+    }
+
+    public MutableLiveData<Boolean> deleteCategory(Category category) {
+        return categoryFirebase.deleteCategory(category);
+    }
+
+    public MutableLiveData<Boolean> updateCategory(Category category) {
+        return categoryFirebase.updateCategory(category);
+    }
 }

@@ -25,7 +25,6 @@
         android:layout_marginStart="153dp"
         android:layout_marginTop="21dp"
         android:layout_marginBottom="10dp"
-        android:onClick="@{() -> WalletFragment.switchToAddWalletFragment()}"
         android:text="@string/add_new_wallet"
         android:textColor="@color/green_special"
         android:textStyle="bold"

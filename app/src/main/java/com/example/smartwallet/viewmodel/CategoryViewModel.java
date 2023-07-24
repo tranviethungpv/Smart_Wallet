@@ -18,4 +18,16 @@ public class CategoryViewModel extends ViewModel {
     public MutableLiveData<ArrayList<Category>> getAllCategories(String userId) {
         return categoryRepository.getAllCategories(userId);
     }
+
+    public MutableLiveData<Boolean> addCategory(Category category) {
+        return categoryRepository.addCategory(category);
+    }
+
+    public MutableLiveData<Boolean> deleteCategory(Category category) {
+        return categoryRepository.deleteCategory(category);
+    }
+
+    public MutableLiveData<Boolean> updateCategory(Category category) {
+        return categoryRepository.updateCategory(category);
+    }
 }
