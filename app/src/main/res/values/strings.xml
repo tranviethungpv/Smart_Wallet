@@ -34,7 +34,7 @@
     <string name="view_recently_transaction">Xem tất cả</string>
     <string name="add_transaction_vi">Thêm giao dịch</string>
     <string name="price">Số tiền</string>
-    <string name="vnd">VND</string>
+    <string name="vnd">VNĐ</string>
     <string name="_000000">000000</string>
     <string name="select_category">Chọn phân loại</string>
     <string name="input_detail">Nhập chi tiết</string>
@@ -61,4 +61,16 @@
     <string name="overview">Tổng quan</string>
     <string name="most_category_index">1</string>
     <string name="no_data">Không có dữ liệu</string>
+    <string name="manage">Quản lý</string>
+    <string name="manage_wallet">Ví của tôi</string>
+    <string name="manage_category">Danh mục của tôi</string>
+    <string name="my_wallet">Ví của tôi</string>
+    <string name="update_wallet_vi">Sửa ví</string>
+    <string name="current_price">Số tiền hiện có</string>
+    <string name="wallet_name">Tên</string>
+    <string name="add_new_wallet">Thêm ví mới</string>
+    <string name="plus">+</string>
+    <string name="transaction_detail">Chi tiết giao dịch</string>
+    <string name="date_time">Ngày tháng năm</string>
+    <string name="wallet_detail">Thông tin ví</string>
 </resources>

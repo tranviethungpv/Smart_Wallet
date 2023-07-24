@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_margin="10dp"
     android:layout_height="match_parent"
-    tools:context=".view.fragment.AddTransactionFragment">
+    tools:context=".view.fragment.transaction.AddTransactionFragment">
 
     <TextView
         android:id="@+id/textViewAddTransactionTitle"

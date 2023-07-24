@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.smartwallet.R;
 import com.example.smartwallet.databinding.CategoryByTransactionItemBinding;
-import com.example.smartwallet.view.fragment.MostlyTransactionFragment;
+import com.example.smartwallet.view.fragment.overview.MostlyTransactionFragment;
 
 import java.util.ArrayList;
 

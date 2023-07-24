@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layoutManage"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    tools:context=".view.fragment.ManageFragment">
+
+
+    <TextView
+        android:id="@+id/textViewManage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/manage"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/lineView1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/lineView1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/gray"
+        app:layout_constraintBottom_toTopOf="@+id/layoutButtonManageWallet"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewManage" />
+
+    <LinearLayout
+        android:id="@+id/layoutButtonManageWallet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lineView1"
+        tools:ignore="UselessParent">
+
+        <ImageView
+            android:id="@+id/imageViewWalletIcon"
+            android:layout_width="36dp"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/_00"
+            android:padding="6dp"
+            android:src="@drawable/baseline_account_balance_wallet_24"
+            app:tint="@color/gray_bold" />
+
+        <TextView
+            android:id="@+id/textViewManageWallet"
+            android:layout_width="297dp"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:paddingStart="10dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="@string/manage_wallet"
+            tools:ignore="RtlSymmetry" />
+
+        <ImageView
+            android:id="@+id/imageViewArrowIcon1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="@string/_00"
+            android:padding="6dp"
+            android:src="@drawable/baseline_keyboard_arrow_right_24"
+            app:tint="@color/gray_bold" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/lineView2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/gray"
+        app:layout_constraintBottom_toTopOf="@+id/layoutButtonManageCategory"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutButtonManageWallet" />
+
+
+    <LinearLayout
+        android:id="@+id/layoutButtonManageCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lineView2"
+        tools:ignore="UselessParent">
+
+        <ImageView
+            android:id="@+id/imageViewCategoryIcon"
+            android:layout_width="36dp"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/_00"
+            android:padding="6dp"
+            android:src="@drawable/baseline_category_24"
+            app:tint="@color/gray_bold" />
+
+        <TextView
+            android:id="@+id/textViewManageCategory"
+            android:layout_width="297dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:paddingStart="10dp"
+            android:text="@string/manage_category"
+            android:textSize="17sp"
+            tools:ignore="RtlSymmetry" />
+
+        <ImageView
+            android:id="@+id/imageViewArrowIcon2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="@string/_00"
+            android:padding="6dp"
+            android:src="@drawable/baseline_keyboard_arrow_right_24"
+            app:tint="@color/gray_bold" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/lineView3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutButtonManageCategory" />
+</androidx.constraintlayout.widget.ConstraintLayout>

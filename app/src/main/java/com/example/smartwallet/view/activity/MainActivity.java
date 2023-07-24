@@ -8,19 +8,18 @@ import android.os.Bundle;
 
 import com.example.smartwallet.R;
 import com.example.smartwallet.databinding.ActivityMainBinding;
-import com.example.smartwallet.utils.SessionManager;
-import com.example.smartwallet.view.fragment.AddTransactionFragment;
-import com.example.smartwallet.view.fragment.HomeFragment;
+import com.example.smartwallet.view.fragment.transaction.AddTransactionFragment;
+import com.example.smartwallet.view.fragment.overview.HomeFragment;
 import com.example.smartwallet.view.fragment.InformationFragment;
-import com.example.smartwallet.view.fragment.StatisticFragment;
-import com.example.smartwallet.view.fragment.TransactionFragment;
+import com.example.smartwallet.view.fragment.ManageFragment;
+import com.example.smartwallet.view.fragment.transaction.TransactionFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
     private final HomeFragment homeFragment = new HomeFragment();
     private final TransactionFragment transactionFragment = new TransactionFragment();
-    private final StatisticFragment statisticFragment = new StatisticFragment();
+    private final ManageFragment manageFragment = new ManageFragment();
     private final InformationFragment informationFragment = new InformationFragment();
     private final AddTransactionFragment addTransactionFragment = new AddTransactionFragment();
 
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 replaceFragment(transactionFragment);
                 return true;
             } else if (item.getItemId() == R.id.itemStatistic) {
-                replaceFragment(statisticFragment);
+                replaceFragment(manageFragment);
                 return true;
             } else if (item.getItemId() == R.id.itemAccount) {
                 replaceFragment(informationFragment);
@@ -50,9 +49,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         FloatingActionButton addButton = activityMainBinding.floatingActionButton;
-        addButton.setOnClickListener(view -> {
-            replaceFragment(addTransactionFragment);
-        });
+        addButton.setOnClickListener(view -> replaceFragment(addTransactionFragment));
     }
 
     private void replaceFragment(Fragment fragment) {

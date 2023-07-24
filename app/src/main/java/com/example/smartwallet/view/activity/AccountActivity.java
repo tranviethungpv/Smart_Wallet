@@ -8,7 +8,6 @@ import android.os.Bundle;
 import com.example.smartwallet.R;
 import com.example.smartwallet.databinding.ActivityAccountBinding;
 import com.example.smartwallet.utils.SessionManager;
-import com.example.smartwallet.view.fragment.HomeFragment;
 import com.example.smartwallet.view.fragment.WelcomeFragment;
 
 public class AccountActivity extends AppCompatActivity {

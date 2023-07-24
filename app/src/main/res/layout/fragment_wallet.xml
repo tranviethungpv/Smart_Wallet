@@ -1,26 +1,43 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layoutStatistic"
+    android:id="@+id/layoutManageWallet"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="10dp"
-    tools:context=".view.fragment.transaction.TransactionFragment">
+    tools:context=".view.fragment.wallet.WalletFragment">
 
 
     <TextView
-        android:id="@+id/textViewStatisticTitle"
+        android:id="@+id/textViewWalletTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/transaction"
+        android:text="@string/my_wallet"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="153dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginBottom="10dp"
+        android:onClick="@{() -> WalletFragment.switchToAddWalletFragment()}"
+        android:text="@string/add_new_wallet"
+        android:textColor="@color/green_special"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerWallet"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/textViewWalletTitle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerTransaction"
+        android:id="@+id/recyclerWallet"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
@@ -29,7 +46,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewStatisticTitle"
+        app:layout_constraintTop_toBottomOf="@+id/textViewWalletTitle"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
@@ -41,7 +58,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewStatisticTitle" />
-
-
+        app:layout_constraintTop_toBottomOf="@+id/textViewWalletTitle" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package com.example.smartwallet.view.fragment;
+package com.example.smartwallet.view.fragment.overview;
 
 import android.os.Bundle;
 

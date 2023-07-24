@@ -1,4 +1,4 @@
-package com.example.smartwallet.view.fragment;
+package com.example.smartwallet.view.fragment.transaction;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -91,7 +91,7 @@ public class TransactionFragment extends Fragment {
                                 categoryList = new ArrayList<>(categories);
                                 transactionAdapter = new TransactionAdapter(transactionArrayList, (transaction, isLongClick) -> {
                                     if (!isLongClick) {
-                                        switchToUpdateTransactionFragment();
+                                        switchToTransactionDetailFragment(transaction);
                                     }
                                     if (isLongClick) {
                                         showContextMenu(transaction);
@@ -139,8 +139,27 @@ public class TransactionFragment extends Fragment {
         recyclerViewTransaction.showContextMenu();
     }
 
+    private void switchToTransactionDetailFragment(Transaction transaction) {
+        TransactionDetailFragment transactionDetailFragment = new TransactionDetailFragment();
+
+        Bundle bundle = new Bundle();
+        if (transaction.getId() != null) {
+            bundle.putString("id", transaction.getId());
+            bundle.putString("userId", transaction.getUserId());
+            bundle.putString("detail", transaction.getDetail());
+            bundle.putString("categoryId", transaction.getCategoryId());
+            bundle.putString("walletId", transaction.getWalletId());
+            bundle.putFloat("amount", transaction.getAmount());
+            bundle.putBoolean("type", transaction.getType());
+            bundle.putSerializable("date", transaction.getDate().toDate());
+        }
+        transactionDetailFragment.setArguments(bundle);
+
+        getParentFragmentManager().beginTransaction().replace(R.id.container, transactionDetailFragment).addToBackStack(null).commit();
+    }
+
     private void switchToUpdateTransactionFragment() {
-        UpdateTransactionFragment updateTaxiFragment = new UpdateTransactionFragment();
+        UpdateTransactionFragment updateTransactionFragment = new UpdateTransactionFragment();
 
         Bundle bundle = new Bundle();
         if (longPressedTransaction.getId() != null) {
@@ -153,9 +172,9 @@ public class TransactionFragment extends Fragment {
             bundle.putBoolean("type", longPressedTransaction.getType());
             bundle.putSerializable("date", longPressedTransaction.getDate().toDate());
         }
-        updateTaxiFragment.setArguments(bundle);
+        updateTransactionFragment.setArguments(bundle);
 
-        getParentFragmentManager().beginTransaction().replace(R.id.container, updateTaxiFragment).addToBackStack(null).commit();
+        getParentFragmentManager().beginTransaction().replace(R.id.container, updateTransactionFragment).addToBackStack(null).commit();
     }
 
     private void updateWalletBalance(Transaction changedTransaction) {

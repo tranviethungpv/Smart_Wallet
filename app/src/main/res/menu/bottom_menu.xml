@@ -20,7 +20,7 @@
     <item
         android:id="@+id/itemStatistic"
         android:icon="@drawable/baseline_bar_chart_24"
-        android:title="@string/statistic"
+        android:title="@string/manage"
         app:showAsAction="always|withText" />
     <item
         android:id="@+id/itemAccount"

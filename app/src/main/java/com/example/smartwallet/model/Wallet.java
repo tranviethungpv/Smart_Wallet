@@ -10,6 +10,12 @@ public class Wallet {
 
     }
 
+    public Wallet(Float balance, String name, String userId) {
+        this.balance = balance;
+        this.name = name;
+        this.userId = userId;
+    }
+
     public Wallet(String id, Float balance, String name, String userId) {
         this.id = id;
         this.balance = balance;
