@@ -5,14 +5,18 @@
     android:id="@+id/layoutAddTransaction"
     android:layout_width="match_parent"
     android:layout_margin="6dp"
+    android:padding="25dp"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/layoutInputName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/layoutButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
@@ -20,28 +24,32 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:contentDescription="@string/blank"
-            android:src="@drawable/wallet"
+            android:src="@drawable/package_icon"
             tools:ignore="ImageContrastCheck" />
 
-        <TextView
+        <EditText
             android:id="@+id/editTextInputDetail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="10dp"
-            android:text="@string/wallet_name"
+            android:autofillHints="Nhập tên danh mục"
+            android:hint="@string/input_category_name"
+            android:inputType="text"
+            android:minHeight="48dp"
             android:textSize="18sp"
             android:textStyle="bold"
-            tools:ignore="VisualLintTextFieldSize" />
+            tools:ignore="LabelFor,VisualLintTextFieldSize,TextContrastCheck" />
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="80dp">
+        app:layout_constraintTop_toBottomOf="@+id/layoutInputName">
 
         <Button
             android:id="@+id/buttonEdit"
@@ -49,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="80dp"
             android:backgroundTint="@color/green_special"
-            android:text="@string/edit"
+            android:text="@string/add"
             android:textColor="@color/white"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

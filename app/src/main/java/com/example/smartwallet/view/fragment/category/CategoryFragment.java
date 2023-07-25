@@ -46,7 +46,10 @@ public class CategoryFragment extends Fragment {
         registerForContextMenu(recyclerViewCategory);
 
         TextView addButton = fragmentCategoryBinding.textView;
-        addButton.setOnClickListener(v -> getParentFragmentManager().beginTransaction().replace(R.id.container, new AddCategoryFragment()).addToBackStack(null).commit());
+        addButton.setOnClickListener(v -> {
+            AddCategoryDialogFragment addCategoryDialogFragment = new AddCategoryDialogFragment();
+            addCategoryDialogFragment.show(getChildFragmentManager(), "AddCategoryDialog");
+        });
         return fragmentCategoryBinding.getRoot();
     }
 
@@ -107,7 +110,7 @@ public class CategoryFragment extends Fragment {
     }
 
     private void switchToUpdateCategoryFragment() {
-        UpdateCategoryFragment updateCategoryFragment = new UpdateCategoryFragment();
+        UpdateCategoryDialogFragment updateCategoryDialogFragment = new UpdateCategoryDialogFragment();
 
         Bundle bundle = new Bundle();
         if (longPressedCategory.getId() != null) {
@@ -115,8 +118,8 @@ public class CategoryFragment extends Fragment {
             bundle.putString("userId", longPressedCategory.getUserId());
             bundle.putString("name", longPressedCategory.getName());
         }
-        updateCategoryFragment.setArguments(bundle);
+        updateCategoryDialogFragment.setArguments(bundle);
 
-        getParentFragmentManager().beginTransaction().replace(R.id.container, updateCategoryFragment).addToBackStack(null).commit();
+        getParentFragmentManager().beginTransaction().replace(R.id.container, updateCategoryDialogFragment).addToBackStack(null).commit();
     }
 }
