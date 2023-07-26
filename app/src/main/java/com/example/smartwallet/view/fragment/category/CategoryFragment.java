@@ -22,11 +22,12 @@ import android.widget.Toast;
 import com.example.smartwallet.R;
 import com.example.smartwallet.adapter.CategoryAdapter;
 import com.example.smartwallet.databinding.FragmentCategoryBinding;
+import com.example.smartwallet.listener.OnCategoryChangedListener;
 import com.example.smartwallet.model.Category;
 import com.example.smartwallet.utils.SessionManager;
 import com.example.smartwallet.viewmodel.CategoryViewModel;
 
-public class CategoryFragment extends Fragment {
+public class CategoryFragment extends Fragment{
     private FragmentCategoryBinding fragmentCategoryBinding;
     private CategoryAdapter categoryAdapter;
     private CategoryViewModel categoryViewModel;
@@ -42,18 +43,29 @@ public class CategoryFragment extends Fragment {
         sessionManager = new SessionManager(requireContext());
         fragmentCategoryBinding = FragmentCategoryBinding.inflate(inflater, container, false);
 
-        renderListWallet();
+        renderListCategory();
         registerForContextMenu(recyclerViewCategory);
 
         TextView addButton = fragmentCategoryBinding.textView;
         addButton.setOnClickListener(v -> {
             AddCategoryDialogFragment addCategoryDialogFragment = new AddCategoryDialogFragment();
+            addCategoryDialogFragment.setOnCategoryChangedListener(new OnCategoryChangedListener() {
+                @Override
+                public void onCategoryAdded() {
+                    renderListCategory();
+                }
+
+                @Override
+                public void onCategoryUpdated() {
+                    renderListCategory();
+                }
+            });
             addCategoryDialogFragment.show(getChildFragmentManager(), "AddCategoryDialog");
         });
         return fragmentCategoryBinding.getRoot();
     }
 
-    private void renderListWallet() {
+    private void renderListCategory() {
         recyclerViewCategory = fragmentCategoryBinding.recyclerCategory;
         recyclerViewCategory.setLayoutManager(new GridLayoutManager(requireActivity(), 1));
 
@@ -95,7 +107,7 @@ public class CategoryFragment extends Fragment {
             categoryViewModel.deleteCategory(longPressedCategory).observe(getViewLifecycleOwner(), result -> {
                 if (result) {
                     Toast.makeText(requireContext(), "Xoá thành công " + longPressedCategory.getName() + "!", Toast.LENGTH_SHORT).show();
-                    renderListWallet();
+                    renderListCategory();
                 } else {
                     Toast.makeText(requireContext(), "Xảy ra lỗi khi xoá " + longPressedCategory.getName() + "!", Toast.LENGTH_SHORT).show();
                 }
@@ -119,7 +131,18 @@ public class CategoryFragment extends Fragment {
             bundle.putString("name", longPressedCategory.getName());
         }
         updateCategoryDialogFragment.setArguments(bundle);
+        updateCategoryDialogFragment.setOnCategoryChangedListener(new OnCategoryChangedListener() {
+            @Override
+            public void onCategoryAdded() {
+                renderListCategory();
+            }
 
-        getParentFragmentManager().beginTransaction().replace(R.id.container, updateCategoryDialogFragment).addToBackStack(null).commit();
+            @Override
+            public void onCategoryUpdated() {
+                renderListCategory();
+            }
+        });
+
+        updateCategoryDialogFragment.show(getChildFragmentManager(), "UpdateCategoryDialog");
     }
 }

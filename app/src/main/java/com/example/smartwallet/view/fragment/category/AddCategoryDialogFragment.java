@@ -18,14 +18,19 @@ import android.widget.Toast;
 
 import com.example.smartwallet.R;
 import com.example.smartwallet.databinding.FragmentAddCategoryDialogBinding;
+import com.example.smartwallet.listener.OnCategoryChangedListener;
 import com.example.smartwallet.model.Category;
 import com.example.smartwallet.utils.SessionManager;
 import com.example.smartwallet.viewmodel.CategoryViewModel;
 
 public class AddCategoryDialogFragment extends DialogFragment {
+    private OnCategoryChangedListener onCategoryChangedListener;
     private EditText inputCategoryName;
     private CategoryViewModel categoryViewModel;
     private SessionManager sessionManager;
+
+    public AddCategoryDialogFragment() {
+    }
 
     @NonNull
     @Override
@@ -50,6 +55,9 @@ public class AddCategoryDialogFragment extends DialogFragment {
                         Toast.makeText(requireContext(), "Thêm thành công", Toast.LENGTH_SHORT).show();
                         clearInput();
                         dismiss();
+                        if (onCategoryChangedListener != null) {
+                            onCategoryChangedListener.onCategoryAdded();
+                        }
                     } else {
                         Toast.makeText(requireContext(), "Có lỗi xảy ra", Toast.LENGTH_SHORT).show();
                     }
@@ -58,7 +66,12 @@ public class AddCategoryDialogFragment extends DialogFragment {
             }
         });
 
-        buttonCancel.setOnClickListener(v -> dismiss());
+        buttonCancel.setOnClickListener(v -> {
+            dismiss();
+            if (onCategoryChangedListener != null) {
+                onCategoryChangedListener.onCategoryAdded();
+            }
+        });
 
         return dialog;
     }
@@ -76,5 +89,9 @@ public class AddCategoryDialogFragment extends DialogFragment {
 
     private void clearInput() {
         inputCategoryName.setText("");
+    }
+
+    public void setOnCategoryChangedListener(OnCategoryChangedListener onCategoryChangedListener) {
+        this.onCategoryChangedListener = onCategoryChangedListener;
     }
 }
