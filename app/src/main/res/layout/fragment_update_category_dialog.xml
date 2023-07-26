@@ -58,7 +58,7 @@
             android:layout_marginStart="50dp"
             android:layout_marginEnd="32dp"
             android:backgroundTint="@color/green_special"
-            android:text="@string/add"
+            android:text="@string/edit"
             android:textColor="@color/white"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
