@@ -35,4 +35,8 @@ public class TransactionViewModel extends ViewModel {
     public MutableLiveData<Map<String, Double>> calculateTotalAmountByMonth(String userId) {
         return transactionRepository.calculateTotalAmountByMonth(userId);
     }
+
+    public MutableLiveData<ArrayList<Transaction>> getTransactionsByHint(String input, String userId) {
+        return transactionRepository.getTransactionsByHint(input, userId);
+    }
 }

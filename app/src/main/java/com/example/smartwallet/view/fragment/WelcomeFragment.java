@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import com.example.smartwallet.R;
 import com.example.smartwallet.adapter.BannerPagerAdapter;
 import com.example.smartwallet.databinding.FragmentWelcomeBinding;
+import com.example.smartwallet.view.fragment.account.LoginFragment;
+import com.example.smartwallet.view.fragment.account.SignUpFragment;
 
 import java.util.Arrays;
 import java.util.List;

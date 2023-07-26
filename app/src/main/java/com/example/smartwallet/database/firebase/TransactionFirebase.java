@@ -7,6 +7,7 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.smartwallet.GlobalFunction;
 import com.example.smartwallet.model.Transaction;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class TransactionFirebase {
@@ -113,5 +115,25 @@ public class TransactionFirebase {
             totalAmountByMonth.setValue(monthlyTotals);
         }).addOnFailureListener(e -> Log.d(TAG, "get failed with ", e));
         return totalAmountByMonth;
+    }
+
+    public MutableLiveData<ArrayList<Transaction>> getTransactionsByHint(String input, String userId) {
+        MutableLiveData<ArrayList<Transaction>> transactionsLiveData = new MutableLiveData<>();
+        CollectionReference docRef = firestore.collection("transactions");
+        ArrayList<Transaction> transactions = new ArrayList<>();
+
+        docRef.whereEqualTo("userId", userId).get().addOnSuccessListener(querySnapshot -> {
+            for (DocumentSnapshot snapshot : querySnapshot.getDocuments()) {
+                Transaction transaction = snapshot.toObject(Transaction.class);
+
+                assert transaction != null;
+                if (transaction.getDetail().toLowerCase().trim().contains(GlobalFunction.getTextSearch(input).toLowerCase(Locale.ROOT).trim())) {
+                    transactions.add(transaction);
+                }
+            }
+            transactionsLiveData.setValue(transactions);
+        }).addOnFailureListener(e -> Log.d(TAG, "get failed with ", e));
+
+        return transactionsLiveData;
     }
 }

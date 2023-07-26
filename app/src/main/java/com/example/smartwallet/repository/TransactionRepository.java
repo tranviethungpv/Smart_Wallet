@@ -34,4 +34,8 @@ public class TransactionRepository {
     public MutableLiveData<Map<String, Double>> calculateTotalAmountByMonth(String userId) {
         return transactionFirebase.calculateTotalAmountByMonth(userId);
     }
+
+    public MutableLiveData<ArrayList<Transaction>> getTransactionsByHint(String input, String userId) {
+        return transactionFirebase.getTransactionsByHint(input, userId);
+    }
 }

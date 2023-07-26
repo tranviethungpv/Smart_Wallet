@@ -27,7 +27,7 @@ import com.example.smartwallet.model.Category;
 import com.example.smartwallet.utils.SessionManager;
 import com.example.smartwallet.viewmodel.CategoryViewModel;
 
-public class CategoryFragment extends Fragment{
+public class CategoryFragment extends Fragment {
     private FragmentCategoryBinding fragmentCategoryBinding;
     private CategoryAdapter categoryAdapter;
     private CategoryViewModel categoryViewModel;

@@ -76,4 +76,14 @@
     <string name="my_category">Danh mục</string>
     <string name="add_new_category">Thêm danh mục mới</string>
     <string name="input_category_name">Nhập tên danh mục</string>
+    <string name="search_transaction">Tìm kiếm giao dịch</string>
+    <string name="email">Email</string>
+    <string name="version">Version v1.0</string>
+    <string name="account_information">Thông tin tài khoản</string>
+    <string name="log_out">Đăng xuất</string>
+    <string name="change_password">Đổi mật khẩu</string>
+    <string name="new_password">Mật khẩu mới</string>
+    <string name="current_password">Mật khẩu hiện tại</string>
+    <string name="re_input_new_pass">Nhập lại mật khẩu mới</string>
+    <string name="update">Cập nhật</string>
 </resources>

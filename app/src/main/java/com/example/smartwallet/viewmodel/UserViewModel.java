@@ -26,4 +26,8 @@ public class UserViewModel extends ViewModel {
     public Task<AuthResult> signUp(String email, String password) {
         return userRepository.signUp(email, password);
     }
+
+    public Task<Void> changePassword(String newPassword) {
+        return userRepository.changePassword(newPassword);
+    }
 }

@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.smartwallet.GlobalFunction;
 import com.example.smartwallet.R;
 import com.example.smartwallet.adapter.TransactionAdapter;
 import com.example.smartwallet.databinding.FragmentTransactionBinding;
@@ -41,6 +44,7 @@ public class TransactionFragment extends Fragment {
     private RecyclerView recyclerViewTransaction;
     private ArrayList<Wallet> walletList;
     private ArrayList<Category> categoryList;
+    private ArrayList<Transaction> transactionList;
     private Transaction longPressedTransaction = new Transaction();
     private SessionManager sessionManager;
     private WalletViewModel walletViewModel;
@@ -55,9 +59,32 @@ public class TransactionFragment extends Fragment {
         fragmentTransactionBinding = FragmentTransactionBinding.inflate(inflater, container, false);
 
         renderListTransaction();
+        initListener();
         registerForContextMenu(recyclerViewTransaction);
 
+        fragmentTransactionBinding.imgSearch.setOnClickListener(v -> GlobalFunction.hideSoftKeyboard(requireActivity()));
+
         return fragmentTransactionBinding.getRoot();
+    }
+
+    private void initListener() {
+        fragmentTransactionBinding.edtSearchName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Do nothing
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Do nothing
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String strKey = s.toString().trim();
+                renderListTransactionsByHint(strKey, sessionManager.getUsername());
+            }
+        });
     }
 
     private void renderListTransaction() {
@@ -72,14 +99,16 @@ public class TransactionFragment extends Fragment {
         transactionViewModel = new ViewModelProvider(this).get(TransactionViewModel.class);
 
         transactionViewModel.getAllTransactions(sessionManager.getUsername()).observe(getViewLifecycleOwner(), transactionArrayList -> {
+            transactionList = new ArrayList<>(transactionArrayList);
             // Sort list by Timestamp
             Comparator<Transaction> descendingComparator = Comparator.comparing(Transaction::getDate).reversed();
-            transactionArrayList.sort(descendingComparator);
+            transactionList.sort(descendingComparator);
 
-            if (transactionArrayList.size() == 0) {
+            if (transactionList.size() == 0) {
                 fragmentTransactionBinding.textViewDataStatus.setVisibility(View.VISIBLE);
             } else {
                 fragmentTransactionBinding.recyclerTransaction.setVisibility(View.VISIBLE);
+                fragmentTransactionBinding.textViewDataStatus.setVisibility(View.GONE);
 
                 // Observe wallet and category data to retrieve the lists
                 walletViewModel.getAllWallets(sessionManager.getUsername()).observe(getViewLifecycleOwner(), wallets -> {
@@ -89,7 +118,7 @@ public class TransactionFragment extends Fragment {
                         categoryViewModel.getAllCategories(sessionManager.getUsername()).observe(getViewLifecycleOwner(), categories -> {
                             if (categories != null) {
                                 categoryList = new ArrayList<>(categories);
-                                transactionAdapter = new TransactionAdapter(transactionArrayList, (transaction, isLongClick) -> {
+                                transactionAdapter = new TransactionAdapter(transactionList, (transaction, isLongClick) -> {
                                     if (!isLongClick) {
                                         switchToTransactionDetailFragment(transaction);
                                     }
@@ -195,6 +224,45 @@ public class TransactionFragment extends Fragment {
                         }
                     });
                 }
+            }
+        });
+    }
+
+    private void renderListTransactionsByHint(String input, String userId) {
+        transactionViewModel.getTransactionsByHint(input, userId).observe(getViewLifecycleOwner(), transactionArrayList -> {
+            transactionList.clear();
+            transactionList = new ArrayList<>(transactionArrayList);
+            // Sort list by Timestamp
+            Comparator<Transaction> descendingComparator = Comparator.comparing(Transaction::getDate).reversed();
+            transactionList.sort(descendingComparator);
+
+            if (transactionList.size() == 0) {
+                fragmentTransactionBinding.textViewDataStatus.setVisibility(View.VISIBLE);
+            } else {
+                fragmentTransactionBinding.recyclerTransaction.setVisibility(View.VISIBLE);
+                fragmentTransactionBinding.textViewDataStatus.setVisibility(View.GONE);
+
+                // Observe wallet and category data to retrieve the lists
+                walletViewModel.getAllWallets(sessionManager.getUsername()).observe(getViewLifecycleOwner(), wallets -> {
+                    if (wallets != null) {
+                        walletList = new ArrayList<>(wallets);
+
+                        categoryViewModel.getAllCategories(sessionManager.getUsername()).observe(getViewLifecycleOwner(), categories -> {
+                            if (categories != null) {
+                                categoryList = new ArrayList<>(categories);
+                                transactionAdapter = new TransactionAdapter(transactionList, (transaction, isLongClick) -> {
+                                    if (!isLongClick) {
+                                        switchToTransactionDetailFragment(transaction);
+                                    }
+                                    if (isLongClick) {
+                                        showContextMenu(transaction);
+                                    }
+                                }, walletList, categoryList);
+                                recyclerViewTransaction.setAdapter(transactionAdapter);
+                            }
+                        });
+                    }
+                });
             }
         });
     }

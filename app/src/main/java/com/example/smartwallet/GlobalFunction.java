@@ -1,9 +1,13 @@
 package com.example.smartwallet;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.google.firebase.Timestamp;
 
+import java.text.Normalizer;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -16,6 +20,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class GlobalFunction {
     public static Timestamp convertLocalDateTimeToTimestamp(String input) {
@@ -177,5 +182,23 @@ public class GlobalFunction {
             }
         }
         return listData;
+    }
+
+    public static String getTextSearch(String input) {
+        String nfdNormalizedString = Normalizer.normalize(input, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(nfdNormalizedString).replaceAll("");
+    }
+
+    public static void hideSoftKeyboard(Activity activity) {
+        try {
+            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            View currentFocus = activity.getCurrentFocus();
+            if (currentFocus != null) {
+                inputMethodManager.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+            }
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
+        }
     }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.smartwallet.model.User;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,4 +41,14 @@ public class UserRepository {
     public Task<AuthResult> signUp(String email, String password) {
         return firebaseAuth.createUserWithEmailAndPassword(email, password);
     }
+
+    public Task<Void> changePassword(String newPassword) {
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        if (firebaseUser != null) {
+            return firebaseUser.updatePassword(newPassword);
+        } else {
+            return Tasks.forException(new Exception("User not authenticated"));
+        }
+    }
+
 }
