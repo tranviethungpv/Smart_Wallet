@@ -27,6 +27,7 @@ public class TransactionFirebase {
     private final MutableLiveData<Boolean> deletedCompletely = new MutableLiveData<>();
     private final MutableLiveData<Boolean> updatedCompletely = new MutableLiveData<>();
     private final MutableLiveData<Map<String, Double>> totalAmountByMonth = new MutableLiveData<>();
+    private final MutableLiveData<Map<String, Double>> totalAllAmountByMonth = new MutableLiveData<>();
 
     public TransactionFirebase() {
         firestore = FirebaseFirestore.getInstance();
@@ -71,7 +72,7 @@ public class TransactionFirebase {
         return updatedCompletely;
     }
 
-    public MutableLiveData<Map<String, Double>> calculateTotalAmountByMonth(String userId) {
+    public MutableLiveData<Map<String, Double>> calculateTotalAmountByMonth(String userId, Boolean isIncome) {
         CollectionReference docRef = firestore.collection("transactions");
 
         docRef.whereEqualTo("userId", userId).get().addOnSuccessListener(task -> {
@@ -95,7 +96,7 @@ public class TransactionFirebase {
                     // Get the type field
                     Object typeObj = snapshot.get("type");
                     Boolean type = (Boolean) typeObj;
-                    if (Boolean.TRUE.equals(type)) {
+                    if (isIncome.equals(type)) {
                         if (amountObj != null) {
                             double amount = (double) amountObj;
 
@@ -115,6 +116,49 @@ public class TransactionFirebase {
             totalAmountByMonth.setValue(monthlyTotals);
         }).addOnFailureListener(e -> Log.d(TAG, "get failed with ", e));
         return totalAmountByMonth;
+    }
+
+    public MutableLiveData<Map<String, Double>> calculateTotalAllAmountByMonth(String userId) {
+        CollectionReference docRef = firestore.collection("transactions");
+
+        docRef.whereEqualTo("userId", userId).get().addOnSuccessListener(task -> {
+            Map<String, Double> monthlyTotals = new HashMap<>();
+
+            for (DocumentSnapshot snapshot : task.getDocuments()) {
+                // Get the timestamp field
+                Object timestampObj = snapshot.get("date");
+
+                if (timestampObj != null) {
+                    // Convert the timestamp to a Date object
+                    Date transactionDate = ((Timestamp) timestampObj).toDate();
+
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(transactionDate);
+                    int month = calendar.get(Calendar.MONTH) + 1; // Adding 1 to get the month in 1-based index
+                    int year = calendar.get(Calendar.YEAR);
+
+                    // Get the amount field
+                    Object amountObj = snapshot.get("amount");
+
+                    if (amountObj != null) {
+                        double amount = (double) amountObj;
+
+                        // Update the total amount for the corresponding month
+                        @SuppressLint("DefaultLocale") String monthKey = String.format("%02d-%04d", month, year);
+                        Double currentTotal = monthlyTotals.get(monthKey);
+                        if (currentTotal != null) {
+                            currentTotal += amount;
+                        } else {
+                            currentTotal = amount;
+                        }
+                        monthlyTotals.put(monthKey, currentTotal);
+                    }
+                }
+            }
+
+            totalAllAmountByMonth.setValue(monthlyTotals);
+        }).addOnFailureListener(e -> Log.d(TAG, "get failed with ", e));
+        return totalAllAmountByMonth;
     }
 
     public MutableLiveData<ArrayList<Transaction>> getTransactionsByHint(String input, String userId) {

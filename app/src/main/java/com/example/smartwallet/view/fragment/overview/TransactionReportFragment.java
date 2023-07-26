@@ -61,7 +61,7 @@ public class TransactionReportFragment extends Fragment {
 
     @SuppressLint({"ResourceAsColor", "SetTextI18n"})
     private void processOverview() {
-        transactionViewModel.calculateTotalAmountByMonth(sessionManager.getUsername()).observe(getViewLifecycleOwner(), listAmountByMonth -> {
+        transactionViewModel.calculateTotalAmountByMonth(sessionManager.getUsername(), true).observe(getViewLifecycleOwner(), listAmountByMonth -> {
             Map<String, Double> fullExpenditureData = GlobalFunction.generateBlankValue(listAmountByMonth);
 
             NavigableMap<String, Double> sortedMap = new TreeMap<>(new GlobalFunction.MonthYearComparator());
@@ -128,7 +128,7 @@ public class TransactionReportFragment extends Fragment {
         // Create a list to hold the bar entries
         List<BarEntry> barEntries = new ArrayList<>();
 
-        transactionViewModel.calculateTotalAmountByMonth(sessionManager.getUsername()).observe(getViewLifecycleOwner(), listAmountByMonth -> {
+        transactionViewModel.calculateTotalAmountByMonth(sessionManager.getUsername(), true).observe(getViewLifecycleOwner(), listAmountByMonth -> {
             Map<String, Double> fullExpenditureData = GlobalFunction.generateBlankValue(listAmountByMonth);
 
             //Sort totalExpenditureMap

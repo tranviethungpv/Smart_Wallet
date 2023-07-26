@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.example.smartwallet.view.fragment.overview.ReportFragment;
 import com.google.firebase.Timestamp;
 
 import java.text.Normalizer;
@@ -14,6 +15,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
@@ -199,6 +201,56 @@ public class GlobalFunction {
             }
         } catch (NullPointerException ex) {
             ex.printStackTrace();
+        }
+    }
+
+    public static void synchronizeCategoryLists(ArrayList<ReportFragment.CategoryAmountByMonth> incomeList, ArrayList<ReportFragment.CategoryAmountByMonth> outcomeList) {
+        for (ReportFragment.CategoryAmountByMonth incomeItem : incomeList) {
+            String incomeMonth = incomeItem.getMonth();
+            boolean found = false;
+
+            for (ReportFragment.CategoryAmountByMonth outcomeItem : outcomeList) {
+                if (incomeMonth.equals(outcomeItem.getMonth())) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                ReportFragment.CategoryAmountByMonth newOutcomeItem = new ReportFragment.CategoryAmountByMonth(incomeMonth, "", "", 0.0);
+                outcomeList.add(newOutcomeItem);
+            }
+        }
+
+        for (ReportFragment.CategoryAmountByMonth outcomeItem : outcomeList) {
+            String outcomeMonth = outcomeItem.getMonth();
+            boolean found = false;
+
+            for (ReportFragment.CategoryAmountByMonth incomeItem : incomeList) {
+                if (outcomeMonth.equals(incomeItem.getMonth())) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                ReportFragment.CategoryAmountByMonth newIncomeItem = new ReportFragment.CategoryAmountByMonth(outcomeMonth, "", "", 0.0);
+                incomeList.add(newIncomeItem);
+            }
+        }
+    }
+
+    public static void synchronizeIncomeAndOutcomeMaps(Map<String, Double> incomeMap, Map<String, Double> outcomeMap) {
+        for (String month : incomeMap.keySet()) {
+            if (!outcomeMap.containsKey(month)) {
+                outcomeMap.put(month, 0.0);
+            }
+        }
+
+        for (String month : outcomeMap.keySet()) {
+            if (!incomeMap.containsKey(month)) {
+                incomeMap.put(month, 0.0);
+            }
         }
     }
 }

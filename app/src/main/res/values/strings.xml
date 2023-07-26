@@ -86,4 +86,8 @@
     <string name="current_password">Mật khẩu hiện tại</string>
     <string name="re_input_new_pass">Nhập lại mật khẩu mới</string>
     <string name="update">Cập nhật</string>
+    <string name="report">Báo cáo</string>
+    <string name="income_amount">Khoản thu</string>
+    <string name="amount">TextView</string>
+    <string name="outcome_amount">Khoản chi</string>
 </resources>

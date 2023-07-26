@@ -32,8 +32,12 @@ public class TransactionViewModel extends ViewModel {
         return transactionRepository.updateTransaction(transaction);
     }
 
-    public MutableLiveData<Map<String, Double>> calculateTotalAmountByMonth(String userId) {
-        return transactionRepository.calculateTotalAmountByMonth(userId);
+    public MutableLiveData<Map<String, Double>> calculateTotalAmountByMonth(String userId, Boolean isIncome) {
+        return transactionRepository.calculateTotalAmountByMonth(userId, isIncome);
+    }
+
+    public MutableLiveData<Map<String, Double>> calculateTotalAllAmountByMonth(String userId) {
+        return transactionRepository.calculateTotalAllAmountByMonth(userId);
     }
 
     public MutableLiveData<ArrayList<Transaction>> getTransactionsByHint(String input, String userId) {

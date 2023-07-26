@@ -40,6 +40,8 @@ public class HomeFragment extends Fragment {
         displayReport();
         displayMostCategoryByTransaction();
 
+        fragmentHomeBinding.textViewViewReport.setOnClickListener(v -> getParentFragmentManager().beginTransaction().replace(R.id.container, new ReportFragment()).addToBackStack(null).commit());
+
         return rootView;
     }
 
